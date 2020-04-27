@@ -1,0 +1,27 @@
+[[extend "layout.html"]]
+[[if message!='Error':]]
+<p>[[=message]]</p>
+<h3>Подтвердите правильность таблицы [[=table]]: </h3>
+<table class="table" style="width:100%">
+    <tr>
+        [[for name in new_data_dict[0].keys():]]
+            <th id="value[[=name]]">[[=name]]</th>
+        [[pass]]
+    </tr>
+    [[for key in new_data_dict:]]
+    <tr>
+        [[for k,val in key.items():]]
+            <td id="value[[=new_data_dict.index(key)]]_[[=k]]" align="center">[[=val]]</td>
+        [[pass]]
+    </tr>
+    [[pass]]
+</table>
+<form method="post" action="confirm">
+    <input type="submit" value="Подтвердить">
+    <input type="hidden" name='tabl_name' value=[[=table]]>
+    <input type="hidden" name='file_name' value=[[=filename]]>
+    <input type="hidden" name='quarter' value=[[=quarter]]>
+</form>
+[[else:]]
+<p>Вы должны добавить компаниюю в Add company</p>
+[[pass]]

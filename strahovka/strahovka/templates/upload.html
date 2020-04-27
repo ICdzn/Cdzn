@@ -1,0 +1,22 @@
+[[extend "layout.html"]]
+[[if globals().get('user'):]]
+<h2>Загрузить файл:</h2>
+<form method="post" action="upload" enctype="multipart/form-data">
+    <div>
+        Выберите тип загружаемой таблицы:
+        <input type="text" name="table">
+        *2-раздел 3 или 4, 3-журнал выплат
+    </div>
+    <div>
+        Выберите номер квартала:
+        <input type="text" name="quarter">
+    </div>
+    <p></p>
+    <input type="file" name="neededFile">
+    <input type="submit" value="Загрузить">
+</form>
+[[else:]]
+Вы не зарегестрированы, поэтому не можете загрузить файл
+[[pass]]
+
+

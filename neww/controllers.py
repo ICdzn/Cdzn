@@ -88,10 +88,10 @@ def upload_post():
 
 @action("show_db")
 def show():
+    m = []
     m1 = []
-    m2 = []
     for i in db(db.payout).select():
-        m1.append(str(i))
+        m.append(str(i))
     for i in db(db.type).select():
-        m2.append(str(i))
-    return dict(m1=m1,m2=m2)
+        m1.append(str(i))
+    return dict(m1=m,m2=m1)

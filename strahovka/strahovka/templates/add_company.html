@@ -1,0 +1,113 @@
+[[extend "layout.html"]]
+[[if globals().get('user'):]]
+<div class="wrapper">
+<div>
+        <h4 class="title is-3">Укажите, к какой компании вы относитесь:</h4>
+<select id="select_first" style="width:400px;" class="js-example-basic-single" ><option value="%null%"></option>
+    [[for row in rows:]]
+        <option value="[[=row.id]]">[[=row.IAN_FULL_NAME]]</option>
+    [[pass]]
+</select>
+    <button id="add">Добавить</button>
+    <label id="ok_add"></label><br>
+
+    <h4 class="title is-3" style="margin-top:40px;">Укажите, какую компанию вы хотите удалить из своего списка</h4>
+<select id="select_second" style="width:400px;" class="js-example-basic-single" ><option value="%null%"></option>
+    [[for row in rows:]]
+        <option value="[[=row.id]]">[[=row.IAN_FULL_NAME]]</option>
+    [[pass]]
+</select>
+    <button id="delete_company">Удалить</button>
+    <label id="ok_delete"></label><br>
+
+    <h1 class="title is-5" style="margin-top:70px;">Информация о вашем аккаунте пользователя: </h1>
+    <ul>
+    <li>ID: [[=auth_user.id]]</li>
+    <li>Username: [[=auth_user.username]]</li>
+    <li>Email: [[=auth_user.email]]</li>
+    <li>First name: [[=auth_user.first_name]]</li>
+    <li>Last name: [[=auth_user.last_name]]</li>
+    </ul>
+
+    <h1 class="title is-5" style="margin-top:70px;">Информация о вашем аккаунте контактного лица компании: </h1>
+    <ul>
+    <li>ID: [[=site_user.id]]</li>
+    <li>First name: [[=site_user.first_name]]</li>
+    <li>Last name: [[=site_user.last_name]]</li>
+    <li>Mobile phone: [[=site_user.mobile_phone]]</li>
+    <li>Work phone: [[=site_user.work_phone]]</li>
+    <li>Email 1: [[=site_user.email1]]</li>
+    <li>Email 2: [[=site_user.email2]]</li>
+    <li>Компании, к которым вы относитесь:</li>
+        [[for company in site_user.company_user.select():]]
+                <li>[[=company.company_id.IAN_FULL_NAME]]</li>
+
+        [[pass]]
+    </ul>
+</div>
+
+<div>
+<h2 class="title">Изменить свои данные пользователя сайта: </h2>
+
+[[=form1]]
+
+<h2 class="title">Изменить свои данные контактного лица компании: </h2>
+
+[[=form2]]
+
+
+</div>
+    </div>
+
+<style>
+.wrapper {
+  display: grid;
+  grid-template-columns: 650px 650px;
+}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+$(document).ready(function () {
+        $(select_first).change(function() {
+            var choice_id=this.value;
+            console.log(choice_id);
+                $(add).bind("click", function(){
+                console.log(choice_id);
+                        $.ajax({
+                            type:"POST",
+                            data: {'choice_id':choice_id, 'action':'add'},
+                            url: 'add_company',
+                            success: function(){$(ok_add).text('Добавлено')}
+                            });
+                        });
+                    });
+                });
+</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+$(document).ready(function () {
+        $(select_second).change(function() {
+            var choice_id=this.value;
+            console.log(choice_id);
+                $(delete_company).bind("click", function(){
+                console.log(choice_id);
+                        $.ajax({
+                            type:"POST",
+                            data: {'choice_id':choice_id, 'action':'delete'},
+                            url: 'add_company',
+                            success: function(){$(ok_delete).text('Удалено')}
+                            });
+                        });
+                    });
+                });</script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
+</script>
+[[else:]]
+Вы не зарегестрированы или не вошли в аккаунт
+[[pass]]

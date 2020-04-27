@@ -1,0 +1,75 @@
+[[extend "layout.html"]]
+[[if rows:]]
+<style>
+    div{
+        overflow-x: auto;
+    }
+table {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 14px;
+  background: white;
+  max-width: 70%;
+  width: 70%;
+  border-collapse: collapse;
+  text-align: left;
+}
+th {
+  font-weight: normal;
+  color: #039;
+  border-bottom: 2px solid #6678b1;
+  padding: 10px 8px;
+}
+td {
+  color: #669;
+  padding: 9px 8px;
+  transition: .3s linear;
+}
+tr:hover td {color: black;}
+</style>
+<div>
+<table cellpadding="1" cellspacing="0" class="grid zebra">
+                        <tr >
+                            <th id="ID">ID</th>
+                            <th id="IAN_FULL_NAME">Найменування</th>
+                            <th id="FIN_TYPE">Тип ФУ</th>
+                            <th id="IM_NUMIDENT">Код ЄДРПОУ</th>
+                            <th id="IAN_RO_SERIA">Серія свідоцтва<br />про реєстрацію </th>
+                            <th id="IAN_RO_CODE">Номер свідоцтва<br />про реєстрацію </th>
+                            <th id="IAN_RO_DT">Дата реєстрації</th>
+                            <th id="DIC_NAME">Статус</th>
+                            <th id="F_ADR">Адреса</th>
+                            <th id="IA_PHONE_CODE">Міжміський<br />телефонний<br />код</th>
+                            <th id="IA_PHONE">Телефон</th>
+                            <th id="IA_EMAIL">E-mail</th>
+                            <th id="IND_OBL">Область</th>
+                            <th id="K_NAME">ПІБ керівника</th>
+                            <th id="abbreviation">Неповна назва</th>
+                            <th id="position">Посада керівника</th>
+                            <th id="update_date">Дата оновлення</th>
+                            <th id="changes">Зміни</th>
+                        </tr>
+  [[for row in rows:]]
+  <tr>
+                        <td headers="ID" >[[=row.id]]</td>
+                        <td headers="IAN_FULL_NAME" >[[=row.IAN_FULL_NAME]]"</td>
+                        <td headers="FIN_TYPE" >[[=row.FIN_TYPE]]</td>
+                        <td headers="IM_NUMIDENT" >[[=row.IM_NUMIDENT]]</td>
+                        <td headers="IAN_RO_SERIA" >[[=row.IAN_RO_SERIA]]</td>
+                        <td headers="IAN_RO_CODE" >[[=row.IAN_RO_CODE]]</td>
+                        <td headers="IAN_RO_DT" >[[=row.IAN_RO_DT]]</td>
+                        <td headers="DIC_NAME" >[[=row.DIC_NAME]]</td>
+                        <td headers="F_ADR" >[[=row.F_ADR]]</td>
+                        <td headers="IA_PHONE_CODE" >[[=row.IA_PHONE_CODE]]</td>
+                        <td headers="IA_PHONE" >[[=row.IA_PHONE]]</td>
+                        <td headers="IA_EMAIL" >[[=row.IA_EMAIL]]</td>
+                        <td headers="IND_OBL" >[[=row.IND_OBL]]</td>
+                        <td headers="K_NAME">[[=row.K_NAME]]</td>
+                        <td headers="abbreviation">[[=row.abbreviation]]</td>
+                        <td headers="position">[[=row.position]]</td>
+                        <td headers="update_date">[[=row.update_date]]</td>
+                        <td headers="changes">[[=row.changes]]</td>
+  </tr>
+  [[pass]]
+</table></div>
+[[pass]]
+

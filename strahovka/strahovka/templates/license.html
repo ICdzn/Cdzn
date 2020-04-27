@@ -1,0 +1,101 @@
+[[extend "layout.html"]]
+[[if rows:]]
+<style>
+    div{
+        overflow-x: auto;
+    }
+table {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 14px;
+  background: white;
+  max-width: 70%;
+  width: 70%;
+  border-collapse: collapse;
+  text-align: left;
+}
+th {
+  font-weight: normal;
+  color: #039;
+  padding: 10px 15px;
+}
+td {
+  color: #669;
+  border-top: 1px solid #e8edff;
+  padding: 10px 15px;
+}
+tr:hover td {background: #e8edff;}
+</style>
+<div>
+    <table class='grid zebra'>
+    <tr>
+        <th id="COMPANY_ID">ID Компанії</th>
+      <th id="NFS_CODE">Код фін. послуги</th>
+      <th id="NFS_NAME">Назва фін. послуги</th>
+      <th id="LT_NNR2">Підстава анулювання</th>
+      <th id="LT_NAME">Тип ліцензії</th>
+      <th id="IL_NAME">Назва</th>
+      <th id="IL_NUMBER">Серія та номер</th>
+      <th id="IL_DATE">Дата видачи ліцензії</th>
+      <th id="IL_DATE_BEGIN">Початок дії</th>
+      <th id="IL_DATE_END">Кінець дії</th>
+      <th id="IL_DATE_NULLIFY">Дата розпорядження про анулювання ліцензії</th>
+      <th id="IL_TERM">Строк дії ліцензії</th>
+      <th id="IL_DUPLICAT_DATE">Дата видачі дубліката ліцензії</th>
+      <th id="IL_DUPLICAT_NO">Серія та номер дубліката ліцензії</th>
+      <th id="LT_NNR_DUPL">Підстава для видачі дубліката ліцензії</th>
+      <th id="IL_REREG_DATE">Дата переоформлення ліцензії</th>
+      <th id="IL_REREG_NO">Серія та номер переоформленої ліцензії</th>
+      <th id="LT_NNR_REREG">Підстава для переоформлення ліцензії</th>
+      <th id="IL_SUSPEND_DATE">Дата тимчасового зупинення дії ліцензії</th>
+      <th id="LT_NNR_SUSPEND">Підстава для тимчасового зупинення  дії ліцензії</th>
+      <th id="IL_RESUME_DATE">Дата поновлення дії ліцензії</th>
+      <th id="LT_NNR_RESUME">Підстава для поновлення  дії ліцензії</th>
+      <th id="IL_NULLIFY_NO">Номер розпорядження про анулювання ліцензії</th>
+      <th id="LT_BOOL">Наявність правил для провадження фінансової послуги</th>
+      <th id="IL_APPOINTMENT">Назва посади особи, що підписала ліцензію</th>
+        <th id="ILD_LRO_DATE">Дата набрання розпорядженням чинності</th>
+        <th id="ILD_AOC_NUM">Номер оскарження розпорядження у суді</th>
+        <th id="ILD_AOC_DATE">Дата оскарження розпорядження у суді</th>
+        <th id="ILD_AOSRS_NUM">Номер оскарження розпорядження в ДРС України</th>
+        <th id="ILD_AOSRS_DATE">Дата оскарження розпорядження в ДРС України</th>
+    </tr>
+
+  [[for row in rows:]]
+        [[for license in row.license.select():]]
+    <tr>
+        <td headers="COMPANY_ID">[[=license.company_id]]</td>
+      <td headers="NFS_CODE">[[=license.NFS_CODE]]</td>
+      <td headers="NFS_NAME">[[=license.NFS_NAME]]</td>
+      <td headers="LT_NNR2">[[=license.LT_NNR2]]</td>
+      <td headers="LT_NAME">[[=license.LT_NAME]]</td>
+      <td headers="IL_NAME">[[=license.IL_NAME]]</td>
+      <td headers="IL_NUMBER">[[=license.IL_NUMBER]]</td>
+      <td headers="IL_DATE">[[=license.IL_DATE]]</td>
+      <td headers="IL_DATE_BEGIN">[[=license.IL_DATE_BEGIN]]</td>
+      <td headers="IL_DATE_END">[[=license.IL_DATE_END]]</td>
+      <td headers="IL_DATE_NULLIFY">[[=license.IL_DATE_NULLIFY]]</td>
+      <td headers="IL_TERM">[[=license.IL_TERM]]</td>
+      <td headers="IL_DUPLICAT_DATE">[[=license.IL_DUPLICAT_DATE]]</td>
+      <td headers="IL_DUPLICAT_NO">[[=license.IL_DUPLICAT_NO]]</td>
+      <td headers="LT_NNR_DUPL">[[=license.LT_NNR_DUPL]]</td>
+      <td headers="IL_REREG_DATE">[[=license.IL_REREG_DATE]]</td>
+      <td headers="IL_REREG_NO">[[=license.IL_REREG_NO]]</td>
+      <td headers="LT_NNR_REREG">[[=license.LT_NNR_REREG]]</td>
+      <td headers="IL_SUSPEND_DATE">[[=license.IL_SUSPEND_DATE]]</td>
+      <td headers="LT_NNR_SUSPEND">[[=license.LT_NNR_SUSPEND]]</td>
+      <td headers="IL_RESUME_DATE">[[=license.IL_RESUME_DATE]]</td>
+      <td headers="LT_NNR_RESUME">[[=license.LT_NNR_RESUME]]</td>
+      <td headers="IL_NULLIFY_NO">[[=license.IL_NULLIFY_NO]]</td>
+      <td headers="LT_BOOL">[[=license.LT_BOOL]]</td>
+      <td headers="IL_APPOINTMENT">[[=license.IL_APPOINTMENT]]</td>
+        <td headers="ILD_LRO_DATE">[[=license.ILD_LRO_DATE]]</td>
+        <td headers="ILD_AOC_NUM">[[=license.ILD_AOC_NUM]]</td>
+        <td headers="ILD_AOC_DATE">[[=license.ILD_AOC_DATE]]</td>
+        <td headers="ILD_AOSRS_NUM">[[=license.ILD_AOSRS_NUM]]</td>
+        <td headers="ILD_AOSRS_DATE">[[=license.ILD_AOSRS_DATE]]</td>
+    </tr>
+  [[pass]]
+        [[pass]]
+</table></div>
+[[pass]]
+
