@@ -1,0 +1,27 @@
+[[extend "layout.html"]]
+[[if globals().get('session').get('user'):]]
+<h2>Загрузить файл:</h2>
+<form method="post" action="upload" enctype="multipart/form-data">
+    <div>
+        Выберите номер квартала:
+        <input type="text" name="quarter">
+    </div>
+    <div>
+        Выберите год:
+        <input type="text" name="year">
+    </div>
+    <div>
+        От какой компании:
+        <select name="company">
+            [[for i in companies:]]<option value=[[=i]]>[[=i]]</option>[[pass]]
+        </select>
+    </div>
+    <p></p>
+    <input type="file" name="File">
+    <input type="submit" value="Загрузить">
+</form>
+[[else:]]
+Вы не зарегестрированы, поэтому не можете загрузить файл
+[[pass]]
+
+

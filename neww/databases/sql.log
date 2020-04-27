@@ -1,0 +1,185 @@
+timestamp: 2020-04-27T10:59:32.326801
+CREATE TABLE "auth_user"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "username" CHAR(512) UNIQUE,
+    "email" CHAR(512) UNIQUE,
+    "password" CHAR(512),
+    "first_name" CHAR(512),
+    "last_name" CHAR(512),
+    "sso_id" CHAR(512),
+    "action_token" CHAR(512)
+);
+success!
+timestamp: 2020-04-27T10:59:32.574106
+CREATE TABLE "auth_user_tag_groups"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "path" CHAR(512),
+    "record_id" INTEGER REFERENCES "auth_user" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-04-27T10:59:32.728610
+CREATE TABLE "company"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "IAN_FULL_NAME" CHAR(512),
+    "FIN_TYPE" CHAR(512),
+    "IM_NUMIDENT" CHAR(512),
+    "IAN_RO_SERIA" CHAR(512),
+    "IAN_RO_CODE" CHAR(512),
+    "IAN_RO_DT" CHAR(512),
+    "DIC_NAME" CHAR(512),
+    "F_ADR" CHAR(512),
+    "IA_PHONE_CODE" CHAR(512),
+    "IA_PHONE" CHAR(512),
+    "IA_EMAIL" CHAR(512),
+    "IND_OBL" CHAR(512),
+    "K_NAME" CHAR(512),
+    "IM_IH" CHAR(512)
+);
+success!
+timestamp: 2020-04-27T10:59:32.851220
+CREATE TABLE "payout"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "insurance_type" CHAR(512),
+    "contract_num" INTEGER,
+    "case_num" INTEGER,
+    "insurance_case_date" DATE,
+    "statement_date" DATE,
+    "requirement_date" DATE,
+    "insurance_act_date" DATE,
+    "insurance_payment_date" DATE,
+    "insurance_payment_size" DOUBLE,
+    "settlement_costs" DOUBLE,
+    "reserve_size" DOUBLE,
+    "kvartal" INTEGER,
+    "year" INTEGER,
+    "company_id" INTEGER REFERENCES "company" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-04-27T10:59:32.983865
+CREATE TABLE "type"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "gross_receipts" DOUBLE,
+    "from_residents" DOUBLE,
+    "rfrom_insurers_individuals" DOUBLE,
+    "rfrom_insurers_legal_entities" DOUBLE,
+    "rfrom_reinsurers" DOUBLE,
+    "from_non_residents" DOUBLE,
+    "nfrom_insurers_individuals" DOUBLE,
+    "nfrom_insurers_legal_entities" DOUBLE,
+    "nfrom_reinsurers" DOUBLE,
+    "payments_return_to_insurers" DOUBLE,
+    "payments_return_to_residents" DOUBLE,
+    "rpayments_return_to_individuals" DOUBLE,
+    "rpayments_return_to_legal_entities" DOUBLE,
+    "rpayments_return_to_reinsurers" DOUBLE,
+    "payments_return_to_non_residents" DOUBLE,
+    "npayments_return_to_individuals" DOUBLE,
+    "npayments_return_to_legal_entities" DOUBLE,
+    "npayments_return_to_reinsurers" DOUBLE,
+    "payments_paid_to_reinsurers" DOUBLE,
+    "payments_paid_to_reinsurers_non_resident" DOUBLE,
+    "payments_paid_to_reinsurers2" DOUBLE,
+    "payments_paid_to_reinsurers2_non_resident" DOUBLE,
+    "unearned_premiums" DOUBLE,
+    "unearned_premiums_reinsurer" DOUBLE,
+    "unearned_premiums_reinsurers_non_resident" DOUBLE,
+    "technical_reserves" DOUBLE,
+    "reported_unpaid_losses" DOUBLE,
+    "unreported_losses" DOUBLE,
+    "catastrophe_reserve" DOUBLE,
+    "loss_reserve_fluctuations" DOUBLE,
+    "share_of_reinsurers_unearned_premiums" DOUBLE,
+    "share_of_reinsurers_unearned_premiums_non_resident" DOUBLE,
+    "insurance_cases_payments" DOUBLE,
+    "insurance_payments" DOUBLE,
+    "insurance_payments_residents" DOUBLE,
+    "rinsurance_payments_individuals" DOUBLE,
+    "rinsurance_payments_legal_entities" DOUBLE,
+    "rinsurance_payments_reinsurers" DOUBLE,
+    "insurance_payments_non_residents" DOUBLE,
+    "ninsurance_payments_individuals" DOUBLE,
+    "ninsurance_payments_legal_entities" DOUBLE,
+    "ninsurance_payments_reinsurers" DOUBLE,
+    "payments_offset_by_reinsurers" DOUBLE,
+    "payments_offset_by_reinsurers_non_resident" DOUBLE,
+    "maximum_insurance_payment" DOUBLE,
+    "acquisition_costs" CHAR(512),
+    "agency_fees" DOUBLE,
+    "agency_fees_non_resident" DOUBLE,
+    "costs_reinsurance_contracts" DOUBLE,
+    "rewards_brokers" DOUBLE,
+    "rewards_brokers_non_resident" DOUBLE,
+    "commissions_for_reinsurer" DOUBLE,
+    "commissions_for_reinsurer_non_resident" DOUBLE,
+    "regulation_of_insured_events_in" DOUBLE,
+    "legal_costs_in" DOUBLE,
+    "expert_work_in" DOUBLE,
+    "emergency_commissioners_in" DOUBLE,
+    "assistance_agencies_in" DOUBLE,
+    "assistance_agencies_in_non_resident" DOUBLE,
+    "regulation_of_insured_events_previous" DOUBLE,
+    "legal_costs_previous" DOUBLE,
+    "expert_work_previous" DOUBLE,
+    "emergency_commissioners_previous" DOUBLE,
+    "assistance_agencies_previous" DOUBLE,
+    "assistance_agencies_previous_non_resident" DOUBLE,
+    "number_of_insurance_contracts" DOUBLE,
+    "number_contracts_individuals" DOUBLE,
+    "number_contracts_legal_entities" DOUBLE,
+    "minimum_insurance_amount" DOUBLE,
+    "number_of_contracts_not_executed" DOUBLE,
+    "number_of_contracts_not_executed_individuals" DOUBLE,
+    "total_responsibility" DOUBLE,
+    "payables" DOUBLE,
+    "kvartal" INTEGER,
+    "year" INTEGER,
+    "company_id" INTEGER REFERENCES "company" ("id") ON DELETE CASCADE  
+);
+success!
+timestamp: 2020-04-27T10:59:33.107485
+CREATE TABLE "person"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "file" CHAR(512)
+);
+success!
+timestamp: 2020-04-27T11:06:11.697625
+ALTER TABLE "type" ADD "quarter" INTEGER;
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
