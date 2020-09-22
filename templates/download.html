@@ -1,0 +1,33 @@
+[[extend "layout.html"]]
+[[if globals().get('session').get('user'):]]
+<form method="post" action="download" enctype="multipart/form-data">
+<table border=2 width=80% align="center">
+	<tr>
+		<td>Виберіть компанію</td>
+		<td>Виберіть початок потрібного періоду</td>
+		<td>Виберіть кінець потрібного періоду</td>
+		<td>Виберіть, яка таблиця вам потрібна</td>
+	</tr>
+	<tr>
+		<td>
+			<select name="company">
+            [[for i in range(len(companies)):]]<option value=[[=(comp[i])]]>[[=(companies[i])]]</option>[[pass]]
+			</select>
+		</td>
+		<td><input type="date" name="date1"></td>
+		<td><input type="date" name="date2"></td>
+		<td>
+			<select name="basa">
+				<option value=1>3 розділ</option>
+				<option value=2>4 розділ</option>
+				<option value=3>Журнал виплат</option>
+				<option value=4>Резерв заявлених збитків</option>
+			</select>
+		</td>
+	</tr>
+	<tr><td colspan=4><p align="center"><input type="submit" value="Do it"></p></td></tr>
+</table>
+</form>
+[[else:]]
+Вы не зареєстровані, тому не можете завантажити файл
+[[pass]]

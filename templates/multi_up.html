@@ -1,0 +1,23 @@
+[[extend "layout.html"]]
+<table><tr><td>
+<div align="center">
+	<form method="post" action="multi_upload" enctype="multipart/form-data">
+	Вкажіть назву компанії:
+    <select name="company">
+		[[for i in range(len(companies)):]]<option value=[[=(comp[i])]]>[[=(companies[i])]]</option>[[pass]]
+    </select>
+	<br>
+	<input type="file" name="File" accept=".xml, .xls, .xlsx" webkitdirectory directory multiple="multiple">
+	<br>
+	<input type="submit" value="Загрузить">
+	</form>
+</div>
+</td><td>
+<div align="center">
+	<h2 strong align="center" style="color:red">Увага!!!</h2><br>
+	Файли, що містять інформацію про третій(четвертий) розділ за форматом Нацкомфінпослуг, потрібно назвати наступним чином: номер кварталу - рік - "Розділ-3(4)". Наприклад: 2-2020-Розділ-3.xlsx, 4-2015-Розділ-4.xls<br>
+	Файли, що містять інформацію про Журнал виплат (Резерв заявлених збитків), повинні в назві вміщувати відповідне слово Журнал (Резерв). Наприклад: 'Журнал.xlsx', 'Резерв.xls'<br>
+	Файли, складені за форматом ІАР, повинні вміщувати в назві відповідне слово. Наприклад: 'ІАР.xls'<br>
+	<h4 strong align="center" style="color:red">Файли, що не відповідають данним вимогам не будуть опрацьовані</h4>
+</div>
+</td></tr><table>

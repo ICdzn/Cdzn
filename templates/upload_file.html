@@ -1,0 +1,42 @@
+[[extend "layout.html"]]
+[[if globals().get('session').get('user'):]]
+<h2>Завантажити файл:</h2>
+<form method="post" action="upload" enctype="multipart/form-data">
+<table class="table is-striped" width=70%><tr>
+<td>
+    <div>
+        Вкажіть назву компанії:
+        <select name="company">
+            [[for i in range(len(companies)):]]<option value=[[=(comp[i])]]>[[=(companies[i])]]</option>[[pass]]
+        </select>
+    </div>
+	<div>
+        Вкажіть, що це за таблиця:
+        <select name="table">
+			<option value=1>Нацкомфінпослуг Розділ 3</option>
+			<option value=2>Нацкомфінпослуг Розділ 4</option>
+			<option value=3>Нацкомфінпослуг Журнал виплат</option>
+			<option value=4>Нацкомфінпослуг РЕЗ</option>
+			<option value=5>IR4</option>
+			<option value=6>ІАР</option>
+		</select>
+    </div>
+    <input type="submit" value="Далі">
+</td>
+<td>
+Приклад таблиць за форматом Нацкомфінпослуг:
+<br>
+<a href="Раздел 3.xlsx" download>Розділ 3</a>
+<a href="Раздел 4.xlsx" download>Розділ 4</a>
+<br>
+<a href="Журнал виплат.xlsx" download>Журнал виплат</a>
+<br>
+<a href="Резерв заявлених збитків.xlsx" download>Резерв заявлених збитків</a>
+</td>
+</tr></table>
+</form>
+[[else:]]
+Вы не зареєстровані, тому не можете завантажити файл
+[[pass]]
+
+

@@ -1,0 +1,26 @@
+[[extend "layout.html"]]
+[[if globals().get('session').get('user'):]]
+<div align="center">
+<form method="post" action="add_company" enctype="multipart/form-data">
+<table>
+<tr><td colspan=2><p align="center">Заполните следующие поля:</p></td></tr>
+<tr><td>Найменування</td><td><input type="text" name="name"></td></tr>
+<tr><td>Тип ФУ</td><td><input type="text" name="type"></td></tr>
+<tr><td>Код ЄДРПОУ</td><td><input type="text" name="kod"></td></tr>
+<tr><td>Серія свідоцтва про реєстрацію</td><td><input type="text" name="series"></td></tr>
+<tr><td>Номер свідоцтва про реєстрацію</td><td><input type="text" name="number"></td></tr>
+<tr><td>Дата реєстрації</td><td><input type="text" name="date"></td></tr>
+<tr><td>Статус</td><td><input type="text" name="status"></td></tr>
+<tr><td>Адреса</td><td><input type="text" name="adres"></td></tr>
+<tr><td>Міжміський телефонний код</td><td><input type="text" name="tel_kod"></td></tr>
+<tr><td>Телефон</td><td><input type="text" name="tel"></td></tr>
+<tr><td>E-mail</td><td><input type="text" name="email"></td></tr>
+<tr><td>Область</td><td><input type="text" name="obl"></td></tr>
+<tr><td>ПІБ керівника</td><td><input type="text" name="pib"></td></tr>
+<tr><td>Посада</td><td><input type="text" name="position"></td></tr>
+<tr><td>Абревіатура (Скорочена назва компанії)</td><td><input type="text" name="abbreviation"></td></tr>
+<tr><td colspan=2><p align="center"><input type="submit" value="Додати компанію"></p></td></tr>
+</form>
+</div>
+[[else:]]
+[[pass]]

@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:annotation>
+		<xs:documentation>IR4 Дані про показники діяльності зі страхування</xs:documentation>
+		<xs:appinfo>Published: 29.05.2020 13:00:40</xs:appinfo>
+		<xs:appinfo>Start date: 01.01.2020</xs:appinfo>
+	</xs:annotation>
+
+	<xs:simpleType name="CTREPORTDATE">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="(0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.\d\d\d\d"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CTKOD_EKP">
+		<xs:annotation>
+			<xs:documentation>Код показника</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		<xs:enumeration value="IR40001">
+		</xs:enumeration>
+		<xs:enumeration value="IR40002">
+		</xs:enumeration>
+		<xs:enumeration value="IR40003">
+		</xs:enumeration>
+		<xs:enumeration value="IR40004">
+		</xs:enumeration>
+		<xs:enumeration value="IR40005">
+		</xs:enumeration>
+		<xs:enumeration value="IR40006">
+		</xs:enumeration>
+		<xs:enumeration value="IR40007">
+		</xs:enumeration>
+		<xs:enumeration value="IR40008">
+		</xs:enumeration>
+		<xs:enumeration value="IR40009">
+		</xs:enumeration>
+		<xs:enumeration value="IR40010">
+		</xs:enumeration>
+		<xs:enumeration value="IR40011">
+		</xs:enumeration>
+		<xs:enumeration value="IR40012">
+		</xs:enumeration>
+		<xs:enumeration value="IR40013">
+		</xs:enumeration>
+		<xs:enumeration value="IR40014">
+		</xs:enumeration>
+		<xs:enumeration value="IR40015">
+		</xs:enumeration>
+		<xs:enumeration value="IR40016">
+		</xs:enumeration>
+		<xs:enumeration value="IR40017">
+		</xs:enumeration>
+		<xs:enumeration value="IR40018">
+		</xs:enumeration>
+		<xs:enumeration value="IR40019">
+		</xs:enumeration>
+		<xs:enumeration value="IR40020">
+		</xs:enumeration>
+		<xs:enumeration value="IR40021">
+		</xs:enumeration>
+		<xs:enumeration value="IR40022">
+		</xs:enumeration>
+		<xs:enumeration value="IR40023">
+		</xs:enumeration>
+		<xs:enumeration value="IR40024">
+		</xs:enumeration>
+		<xs:enumeration value="IR40025">
+		</xs:enumeration>
+		<xs:enumeration value="IR40026">
+		</xs:enumeration>
+		<xs:enumeration value="IR40027">
+		</xs:enumeration>
+		<xs:enumeration value="IR40028">
+		</xs:enumeration>
+		<xs:enumeration value="IR40029">
+		</xs:enumeration>
+		<xs:enumeration value="IR40030">
+		</xs:enumeration>
+		<xs:enumeration value="IR40031">
+		</xs:enumeration>
+		<xs:enumeration value="IR40032">
+		</xs:enumeration>
+		<xs:enumeration value="IR40033">
+		</xs:enumeration>
+		<xs:enumeration value="IR40034">
+		</xs:enumeration>
+		<xs:enumeration value="IR40035">
+		</xs:enumeration>
+		<xs:enumeration value="IR40036">
+		</xs:enumeration>
+		<xs:enumeration value="IR40037">
+		</xs:enumeration>
+		<xs:enumeration value="IR40038">
+		</xs:enumeration>
+		<xs:enumeration value="IR40039">
+		</xs:enumeration>
+		<xs:enumeration value="IR40040">
+		</xs:enumeration>
+		<xs:enumeration value="IR40041">
+		</xs:enumeration>
+		<xs:enumeration value="IR40042">
+		</xs:enumeration>
+		<xs:enumeration value="IR40043">
+		</xs:enumeration>
+		<xs:enumeration value="IR40044">
+		</xs:enumeration>
+		<xs:enumeration value="IR40045">
+		</xs:enumeration>
+		<xs:enumeration value="IR40046">
+		</xs:enumeration>
+		<xs:enumeration value="IR40047">
+		</xs:enumeration>
+		<xs:enumeration value="IR40048">
+		</xs:enumeration>
+		<xs:enumeration value="IR40049">
+		</xs:enumeration>
+		<xs:enumeration value="IR40050">
+		</xs:enumeration>
+		<xs:enumeration value="IR40051">
+		</xs:enumeration>
+		<xs:enumeration value="IR40052">
+		</xs:enumeration>
+		<xs:enumeration value="IR40053">
+		</xs:enumeration>
+		<xs:enumeration value="IR40054">
+		</xs:enumeration>
+		<xs:enumeration value="IR40055">
+		</xs:enumeration>
+		<xs:enumeration value="IR40056">
+		</xs:enumeration>
+		<xs:enumeration value="IR40057">
+		</xs:enumeration>
+		<xs:enumeration value="IR40058">
+		</xs:enumeration>
+		<xs:enumeration value="IR40059">
+		</xs:enumeration>
+		<xs:enumeration value="IR40060">
+		</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CTKOD_H011">
+		<xs:annotation>
+			<xs:documentation>Код виду страхування</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		<xs:enumeration value="01">
+		</xs:enumeration>
+		<xs:enumeration value="02">
+		</xs:enumeration>
+		<xs:enumeration value="03">
+		</xs:enumeration>
+		<xs:enumeration value="04">
+		</xs:enumeration>
+		<xs:enumeration value="05">
+		</xs:enumeration>
+		<xs:enumeration value="06">
+		</xs:enumeration>
+		<xs:enumeration value="07">
+		</xs:enumeration>
+		<xs:enumeration value="08">
+		</xs:enumeration>
+		<xs:enumeration value="09">
+		</xs:enumeration>
+		<xs:enumeration value="10">
+		</xs:enumeration>
+		<xs:enumeration value="11">
+		</xs:enumeration>
+		<xs:enumeration value="12">
+		</xs:enumeration>
+		<xs:enumeration value="13">
+		</xs:enumeration>
+		<xs:enumeration value="14">
+		</xs:enumeration>
+		<xs:enumeration value="15">
+		</xs:enumeration>
+		<xs:enumeration value="16">
+		</xs:enumeration>
+		<xs:enumeration value="17">
+		</xs:enumeration>
+		<xs:enumeration value="18">
+		</xs:enumeration>
+		<xs:enumeration value="19">
+		</xs:enumeration>
+		<xs:enumeration value="20">
+		</xs:enumeration>
+		<xs:enumeration value="21">
+		</xs:enumeration>
+		<xs:enumeration value="22">
+		</xs:enumeration>
+		<xs:enumeration value="23">
+		</xs:enumeration>
+		<xs:enumeration value="24">
+		</xs:enumeration>
+		<xs:enumeration value="25">
+		</xs:enumeration>
+		<xs:enumeration value="26">
+		</xs:enumeration>
+		<xs:enumeration value="27">
+		</xs:enumeration>
+		<xs:enumeration value="28">
+		</xs:enumeration>
+		<xs:enumeration value="29">
+		</xs:enumeration>
+		<xs:enumeration value="30">
+		</xs:enumeration>
+		<xs:enumeration value="31">
+		</xs:enumeration>
+		<xs:enumeration value="32">
+		</xs:enumeration>
+		<xs:enumeration value="33">
+		</xs:enumeration>
+		<xs:enumeration value="34">
+		</xs:enumeration>
+		<xs:enumeration value="35">
+		</xs:enumeration>
+		<xs:enumeration value="36">
+		</xs:enumeration>
+		<xs:enumeration value="37">
+		</xs:enumeration>
+		<xs:enumeration value="38">
+		</xs:enumeration>
+		<xs:enumeration value="39">
+		</xs:enumeration>
+		<xs:enumeration value="40">
+		</xs:enumeration>
+		<xs:enumeration value="41">
+		</xs:enumeration>
+		<xs:enumeration value="42">
+		</xs:enumeration>
+		<xs:enumeration value="43">
+		</xs:enumeration>
+		<xs:enumeration value="44">
+		</xs:enumeration>
+		<xs:enumeration value="45">
+		</xs:enumeration>
+		<xs:enumeration value="46">
+		</xs:enumeration>
+		<xs:enumeration value="47">
+		</xs:enumeration>
+		<xs:enumeration value="48">
+		</xs:enumeration>
+		<xs:enumeration value="49">
+		</xs:enumeration>
+		<xs:enumeration value="50">
+		</xs:enumeration>
+		<xs:enumeration value="51">
+		</xs:enumeration>
+		<xs:enumeration value="52">
+		</xs:enumeration>
+		<xs:enumeration value="53">
+		</xs:enumeration>
+		<xs:enumeration value="54">
+		</xs:enumeration>
+		<xs:enumeration value="55">
+		</xs:enumeration>
+		<xs:enumeration value="56">
+		</xs:enumeration>
+		<xs:enumeration value="57">
+		</xs:enumeration>
+		<xs:enumeration value="58">
+		</xs:enumeration>
+		<xs:enumeration value="59">
+		</xs:enumeration>
+		<xs:enumeration value="60">
+		</xs:enumeration>
+		<xs:enumeration value="61">
+		</xs:enumeration>
+		<xs:enumeration value="62">
+		</xs:enumeration>
+		<xs:enumeration value="63">
+		</xs:enumeration>
+		<xs:enumeration value="64">
+		</xs:enumeration>
+		<xs:enumeration value="65">
+		</xs:enumeration>
+		<xs:enumeration value="66">
+		</xs:enumeration>
+		<xs:enumeration value="67">
+		</xs:enumeration>
+		<xs:enumeration value="68">
+		</xs:enumeration>
+		<xs:enumeration value="69">
+		</xs:enumeration>
+		<xs:enumeration value="70">
+		</xs:enumeration>
+		<xs:enumeration value="71">
+		</xs:enumeration>
+		<xs:enumeration value="72">
+		</xs:enumeration>
+		<xs:enumeration value="73">
+		</xs:enumeration>
+		<xs:enumeration value="74">
+		</xs:enumeration>
+		<xs:enumeration value="75">
+		</xs:enumeration>
+		<xs:enumeration value="76">
+		</xs:enumeration>
+		<xs:enumeration value="77">
+		</xs:enumeration>
+		<xs:enumeration value="78">
+		</xs:enumeration>
+		<xs:enumeration value="79">
+		</xs:enumeration>
+		<xs:enumeration value="80">
+		</xs:enumeration>
+		<xs:enumeration value="81">
+		</xs:enumeration>
+		<xs:enumeration value="82">
+		</xs:enumeration>
+		<xs:enumeration value="83">
+		</xs:enumeration>
+		<xs:enumeration value="84">
+		</xs:enumeration>
+		<xs:enumeration value="85">
+		</xs:enumeration>
+		<xs:enumeration value="86">
+		</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CTKOD_H015">
+		<xs:annotation>
+			<xs:documentation>Тип страхувальника</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		<xs:enumeration value="#">
+		</xs:enumeration>
+		<xs:enumeration value="1">
+		</xs:enumeration>
+		<xs:enumeration value="2">
+		</xs:enumeration>
+		<xs:enumeration value="3">
+		</xs:enumeration>
+		<xs:enumeration value="4">
+		</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CTKOD_K030">
+		<xs:annotation>
+			<xs:documentation>Код резидентності</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		<xs:enumeration value="#">
+		</xs:enumeration>
+		<xs:enumeration value="1">
+		</xs:enumeration>
+		<xs:enumeration value="2">
+		</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CTKOD_Z220">
+		<xs:annotation>
+			<xs:documentation>Код виду клієнта</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		<xs:enumeration value="#">
+		</xs:enumeration>
+		<xs:enumeration value="0">
+		</xs:enumeration>
+		<xs:enumeration value="1">
+		</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CTKOD_T100">
+		<xs:restriction base="xs:long">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="NBUSTATREPORT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="HEAD">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="STATFORM">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="FIR4"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="EDRPOU" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>EDRPOU</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="REPORTDATE" type="CTREPORTDATE">
+								<xs:annotation>
+									<xs:documentation>Звітна дата</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DATA" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="EKP" type="CTKOD_EKP">
+								<xs:annotation>
+									<xs:documentation>Код показника</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="H011" type="CTKOD_H011">
+								<xs:annotation>
+									<xs:documentation>Код виду страхування</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="H015" type="CTKOD_H015">
+								<xs:annotation>
+									<xs:documentation>Тип страхувальника</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="K030" type="CTKOD_K030">
+								<xs:annotation>
+									<xs:documentation>Код резидентності</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Z220" type="CTKOD_Z220">
+								<xs:annotation>
+									<xs:documentation>Код виду клієнта</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="T100" type="CTKOD_T100">
+								<xs:annotation>
+									<xs:documentation>Сума/кількість</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:unique name="EKPAndH011AndH015AndK030AndZ220MustBeUnique">
+				<xs:selector xpath="DATA"/>
+				<xs:field xpath="EKP"/>
+				<xs:field xpath="H011"/>
+				<xs:field xpath="H015"/>
+				<xs:field xpath="K030"/>
+				<xs:field xpath="Z220"/>
+		</xs:unique>
+	</xs:element>
+</xs:schema>

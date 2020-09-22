@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="[[=URL('static')]]/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAAQEAAAEAIAAwAAAAFgAAACgAAAABAAAAAgAAAAEAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAA=="/>
+    <link rel="stylesheet" href="css/bulma.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    [[block page_head]]<!-- individual pages can customize header here -->[[end]]
+  </head>
+  <body>    
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+      <div id="left-navbar" class="navbar-menu">
+        <div class="navbar-start">
+		
+		[[if globals().get('user') and globals().get('user')['id'] == 1:]]
+		  <a class="navbar-item" href="[[=URL('index')]]">Головна</a>
+		  <a class="navbar-item" href="[[=URL('upload')]]">Додати дані</a>
+		  <a class="navbar-item" href="[[=URL('download')]]">Завантажити дані</a>
+		  <a class="navbar-item" href="[[=URL('convert')]]">Конвертер</a>
+		  <a class="navbar-item" href="[[=URL('info_db')]]">Admin Page</a>
+		[[elif globals().get('user'):]]		
+          <a class="navbar-item" href="[[=URL('index')]]">Головна</a>
+		  <a class="navbar-item" href="[[=URL('upload')]]">Додати дані</a>
+		  <a class="navbar-item" href="[[=URL('download')]]">Завантажити дані</a>
+		  <a class="navbar-item" href="[[=URL('convert')]]">Конвертер</a>
+		[[else:]]
+		  <a class="navbar-item" href="[[=URL('index')]]">Головна</a>
+		[[pass]]
+          [[block page_menu_items]]<!-- individual pages can add menu items here -->[[end]]
+        </div>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              [[if globals().get('user'):]]
+              <a class="button is-primary" href="[[=URL('auth/logout')]]">Вихід</a>
+              [[else:]]
+              <a class="button is-primary" href="[[=URL('auth/register')]]">Регістрація</a>
+              <a class="button is-light" href="[[=URL('auth/login')]]">Вхід</a>
+              [[pass]]
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <section class="section">
+      <!-- beginning of HTML inserted by extending template -->
+      [[include]]
+      <!-- end of HTML inserted by extending template -->
+    </section>
+    <footer class="footer">
+      <div class="content has-text-centered">
+	  Made with py4web
+      </div>
+    </footer>
+  </body>
+  <script src="js/sugar.min.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/vue.min.js"></script>
+  [[block page_scripts]]<!-- individual pages can add scripts here -->[[end]]
+</html>

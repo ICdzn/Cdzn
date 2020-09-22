@@ -1,0 +1,93 @@
+<head>
+	<style type="text/css">	
+		.passive { display: none; }
+		.active { display: block; }
+	</style>
+	<script type="text/javascript">
+		var Format = document.getElementByID("format"),
+			curr = null;
+		
+		Format.onchange = function() {
+			var val = this.value,
+				target = document.getElementById('t' + value);
+			var t1 = document.getElementByID("t1");
+			var t2 = document.getElementByID("t2");
+			var t3 = document.getElementByID("t3");
+			var t4 = document.getElementByID("t4");
+			var t5 = document.getElementByID("t5");
+			if (val == 2)
+				var style1 = 'active';
+				var style2 = 'passive';
+			else
+				var style2 = 'active';
+				var style1 = 'passive';
+			if (curr) curr.className = 'passive';
+			if (target) target.className = 'active';
+			curr = target;
+			t5.className = style1;
+			t1.className = style2;
+			t2.className = style2;
+			t3.className = style2;
+			t4.className = style2;
+	};
+</script>
+</head>
+<body>
+<h2>Завантажити файл:</h2>
+<form method="post" action="upload" enctype="multipart/form-data">
+<table width=70%><tr>
+<td>
+    <div>
+        Вкажіть номер кварталу:
+        <input type="text" name="quarter">
+    </div>
+    <div>
+        Вкажіть рік:
+        <input type="text" name="year">
+    </div>
+    <div>
+        Вкажіть назву компанії:
+        <select name="company">
+            <option value=1>c1</option>
+			<option value=2>c2</option>
+			<option value=3>c3</option>
+			<option value=4>c4</option>
+        </select>
+    </div>
+	<div>
+        Вкажіть формат, за яким був сформований файл:
+        <select name="format" id="format">
+            <option id="f1" value=1>Нацкомфінпослуг</option>
+			<option id="f2" value=2>НБУ</option>
+			<option id="f3" value=3>Інститут</option>
+        </select>
+    </div>
+	<div>
+		<select name="table">
+			<option id="t1" class="passive" value=1>Розділ 3</option>
+			<option id="t2" class="passive" value=2>Розділ 4</option>
+			<option id="t3" class="passive" value=3>Журнал виплат</option>
+			<option id="t4" class="passive" value=4>РЕЗ</option>
+			<option id="t5" class="passive" value=5>IR4</option>
+		</select>
+	</div>
+    <p></p>
+    <input type="file" name="File">
+    <input type="submit" value="Загрузить">
+	<div>
+	Для завантаження даних відразу з сайту перейдіть 
+	<a href="[[=URL('pars')]]">сюди</a>
+	</div>
+</td>
+<td>
+Приклад таблиць за форматом Нацкомфінпослуг:
+<br>
+<a href="Раздел 3.xlsx" download>Розділ 3</a>
+<br>
+<a href="Раздел 4.xlsx" download>Розділ 4</a>
+<br>
+<a href="Журнал виплат.xlsx" download>Журнал виплат</a>
+</td>
+</tr></table>
+</form>
+</body>

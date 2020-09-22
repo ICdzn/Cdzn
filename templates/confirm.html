@@ -1,0 +1,84 @@
+[[extend "layout.html"]]
+[[eror = 0]]
+[[if type(result_all[0]) != type([]):]]
+	[[result_all = ([result_all])]]
+[[else:]]
+[[pass]]
+[[for result in result_all:]]
+[[message = (result[0])]]
+[[if table != 6:]]
+	[[result = ([result])]]
+[[else:]]
+[[pass]]
+[[for i in result:]]
+	[[message = (i[0])]]
+	[[df1 = (i[1])]]
+	[[if table != 6:]]
+		[[df2 = (i[2])]]
+	[[else:]]
+	[[pass]]
+	[[if message[:2] == "OK":]]
+		[[try:]]
+			[[a = (df1.columns)]]
+			[[for i2 in range(df1.shape[0]):]]
+				[[for i1 in a:]]
+					[[m = (df1[i1][i2])]]
+				[[pass]]
+			[[pass]]
+		[[except:]]
+			[[message = "OK Неизвестная ошибка"]]
+		[[pass]]
+		[[if len(message) == 2:]]
+			<h1 align="center">Подтвердите правильность таблицы: </h1>
+		[[elif message == "OK Присутствуют недопустимые значения. Свертесь с правилами составления файла по формату НБУ":]]
+			<div align="center">
+			<h1>[[=error]]</h1>
+			<a href="Registry_IR4.xlsx" download>Registry_IR4.xlsx</a>
+			</div>
+		[[else:]]
+			<h1 align="center">[[=(message[2:])]]</h1>
+		[[pass]]
+		[[if message != "OK Неизвестная ошибка":]]
+			<div style="width: 100%; overflow: scroll;">
+			<table border="2" width = "100%">
+			[[for i2 in range(df1.shape[0]):]]
+					<tr>
+					[[for i1 in a:]]
+						[[if table != 6 and i2 == 0:]]
+							[[color = "#FFFFFF"]]
+						[[elif table != 6:]]
+							[[if df2[i1][i2] == 0:]][[color = "#FFFFFF"]]
+							[[elif df2[i1][i2] == 1:]][[color = "#F7FE2E"]]
+							[[else:]][[color = "#FF0000"]][[eror = 1]]
+							[[pass]]
+						[[else:]]
+							[[color = "#FFFFFF"]]
+						[[pass]]
+						<td style="text-align:center; background-color:[[=color]]">[[=(df1[i1][i2])]]</td>
+					[[pass]]
+					</tr>
+			[[pass]]
+			</table>
+			</div>
+		[[else:]]
+		[[pass]]
+	[[else:]]
+		[[eror = 1]]
+		<h1 align="center">[[=error]]</h1>
+		[[if message == "Не співпадає з прикладом. Використовуйте його як бланк":]]
+			<div align="center">
+			<a href="Раздел 3.xlsx" download>Розділ 3</a>
+			<a href="Раздел 4.xlsx" download>Розділ 4</a>
+			</div>
+		[[else:]]
+		[[pass]]
+	[[pass]]
+[[pass]]
+	[[pass]]
+[[pass]]
+[[if eror == 0:]]
+<form action="confirm" align="center">
+	<input type="submit" value="Подтвердить">
+</form>
+[[else:]]
+[[pass]]

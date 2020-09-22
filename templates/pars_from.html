@@ -1,0 +1,36 @@
+[[extend "layout.html"]]
+[[if globals().get('session').get('user'):]]
+<h2>Завантажити файл:</h2>
+<form method="post" action="pars" enctype="multipart/form-data">
+    <div>
+        Вкажіть номер кварталу:
+        <input type="text" name="quarter">
+    </div>
+    <div>
+        Вкажіть рік:
+        <input type="text" name="year">
+    </div>
+    <div>
+        Вкажіть назву компанії:
+        <select name="company">
+            [[for i in range(len(companies)):]]<option value=[[=(comp[i])]]>[[=(companies[i])]]</option>[[pass]]
+        </select>
+    </div>
+    <p></p>
+	<div>
+		Вкажіть адресу:
+		<input type="text" name="URL">
+    </div>
+	<div>
+		Вкажіть логін:
+		<input type="text" name="Login">
+    </div>
+	<div>
+		Вкажіть пароль:
+		<input type="password" name="Password">
+    </div>
+    <input type="submit" value="Загрузить">
+</form>
+[[else:]]
+Вы не зарегестрированы, поэтому не можете загрузить файл
+[[pass]]

@@ -1,0 +1,37 @@
+[[extend "layout.html"]]
+<form method="post" action="upload2" enctype="multipart/form-data">
+	[[if table == 1 or table == 2:]]
+		<div>
+			Вкажіть квартал:
+			<select name="quarter">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+			</select>
+		</div>
+		<div>
+			Вкажіть рік:
+			<input type="text" name="year">
+		</div>
+	[[else:]]
+	[[pass]]
+	[[if table != 6:]]
+		<div>
+			Вкажіть, в чому вимірюються дані:
+			<select name="k">
+				<option value="100000">тис. грн</option>
+				<option value="100">грн</option>
+				<option value="1">коп.</option>
+			</select>
+		</div>
+	[[else:]]
+	[[pass]]
+	<p></p>
+	[[if table == 5:]]
+		<input type="file" name="File">
+	[[else:]]
+		<input type="file" name="File">
+	[[pass]]
+	<input type="submit" value="Загрузить">
+</form>
