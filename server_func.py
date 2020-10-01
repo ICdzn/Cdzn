@@ -190,7 +190,10 @@ def db_toexcel(df, quarter, year, basa):
         ex['total'][i1] = 0
         for i2 in ex.columns[d:]:
             try:
-                ex[i2][i1] = float(int(ex[i2][i1]/10))/100
+                if i1 in [90, 170, 171, 172, 190, 191]:
+                    ex[i2][i1] = int(ex[i2][i1])
+                else:
+                    ex[i2][i1] = float(int(ex[i2][i1]/1000))/100
                 ex['total'][i1] += ex[i2][i1]
             except ValueError:
                 ex[i2][i1] = 0

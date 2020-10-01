@@ -488,6 +488,7 @@ def db34(df, k, user_id):
 
 
 def payout_todb(df, table, k, user_id):
+    log444 = open('log444.txt', 'w')
     user_errors[user_id] = 9
     error = "OK"
     for i in df.columns:
@@ -506,7 +507,7 @@ def payout_todb(df, table, k, user_id):
         if df.iloc[0][i1] != ideal_page.cell_value(1, i1):
             c = False
             break
-    if ce:
+    if c:
         if table == 3 and df.iloc[0][9] == ideal_page.cell_value(1, 9):
             if df.shape[1] == 11:
                 del df[10]
@@ -516,10 +517,12 @@ def payout_todb(df, table, k, user_id):
         else:
             c = False
     if c:
+        log444.write('1\n')
         df_c = df.copy()
         for i1 in range(df.shape[0]):
             for i2 in range(df.shape[1]):
                 df_c[i2][i1] = 0
+        log444.write('2\n')
         for i1 in range(df.shape[0]):
             if i1 == 0: continue
             for i2 in range(6):
@@ -528,12 +531,14 @@ def payout_todb(df, table, k, user_id):
                 elif i2 == 5 and table == 4:
                     i2 = 7
                 a = str(df[i2 + 3][i1])
+                log444.write('3\n')
                 for i in range(len(a)):
                     if a[i] in ' . /_':
                         a = a[:i] + '-' + a[i + 1:]
                         df_c[i2 + 3][i1] = 1
+                log444.write('{}\n'.format(a))
                 if len(a) == 10 and len(a[:a.index('-')]) == 2:
-                    a = datetime.date(int(a[6:]), int(a[3:6]), int(a[:2]))
+                    a = pd.to_datetime(a, dayfirst=True)
                 elif len(a) < 2:
                     a = None
                 elif len(a) < 10:
@@ -550,10 +555,12 @@ def payout_todb(df, table, k, user_id):
                     a = a + '-' + d + '-' + c
                 elif len(a) > 10:
                     df_c = 2
+                log444.write('5\n')
                 try:
                     a = pd.to_datetime(a, dayfirst=True)
                 except pd._libs.tslibs.parsing.DateParseError:
                     pass
+                log444.write('6\n')
                 df[i2 + 3][i1] = a
         for i1 in range(df.shape[0]):
             if i1 == 0: continue
@@ -562,7 +569,7 @@ def payout_todb(df, table, k, user_id):
                     a = str(df[i2][i1])
                     for i in range(len(a)):
                         try:
-                            if a[i] == ' ':
+                            if a[i] in ' .,':
                                 a = a[:i] + a[i + 1:]
                                 df[i2][i1] = 1
                         except IndexError:
@@ -604,6 +611,7 @@ def payout_todb(df, table, k, user_id):
     else:
         error = "Не співпадає з прикладом. Використовуйте його як бланк"
         df = []
+    log444.close()
     return error, df, df_c
 
 def iar_todf(xl, user_id):

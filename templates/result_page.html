@@ -1,8 +1,35 @@
 [[extend "layout.html"]]
 [[if message == "OK":]]
-<p align="center">Для скачування файлу натисніть<a href="[[=url]]" download> сюди</a></p>
+	<p align="center">Для скачування файлу натисніть<a href="[[=url]]" download> сюди</a></p>
 [[elif message == "Операция успешно завершена":]]
-<p align="center">Операция успешно завершена</p>
+	<p align="center">Операция успешно завершена</p>
+[[elif message[:26] == "Операция успешно завершена" and table != ([]):]]
+	<p align="center">Операция успешно завершена</p><br>
+	<p align="center">В базе есть данные по таким периодам</p><br>
+	<table align="center">
+		<th>
+			<td align="center">3 та 4 Розділ</td>
+			<td align="center">Журнал Виплат</td>
+			<td align="center">Резерв Заявлених Збитків</td>
+			<td align="center">Квартал</td>
+			<td align="center">Рік</td>
+		</th>
+		[[for i in range(table.shape[0]):]]
+			<tr>
+			[[for j in range(5):]]
+				<td align="center">
+				[[if j > 2:]]
+					[[=(table.iloc[i][table.columns[j]])]]
+				[[elif table.iloc[i][table.columns[j]] == True:]]
+					<img src="yes.png">
+				[[else:]]
+					<img src="no.png">
+				[[pass]]
+				</td>
+			[[pass]]
+			</tr>
+		[[pass]]
+	</table>
 [[else:]]
-<p align="center">[[=error]]</p>
+	<p align="center">[[=error]]</p>
 [[pass]]

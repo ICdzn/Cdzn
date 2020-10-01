@@ -32,6 +32,8 @@ from py4web.utils.form import Form, FormStyleBulma
 from pydal.validators import IS_IN_SET
 from . import excel_todb, server_func
 import datetime, random
+import pandas as pd
+from lxml import etree, html
 users_block = {}
 for i in db(db.company_user).select():
     users_block[i.site_user] = 0
@@ -134,45 +136,107 @@ def multi_up_get():
 @action("static/multi_upload",method="POST")
 @action.uses("result_page.html", auth)
 def convert_post():
+    log444 = open('log444.txt', 'w')
     user = auth.get_user()
     c = request.POST['company']
     ff = request.files.getall('File')
-    f_names = []
-    result_all = []
+    xmlschema_doc = etree.parse("apps/neww/static/tir4.xsd")
+    xmlschema = etree.XMLSchema(xmlschema_doc)
+    f_errors = pd.DataFrame(columns=['filename', 'error'])
+    files = pd.DataFrame(columns=['filename', 'year', 'quarter', 'prior'])
     for f in ff:
-        filename = "apps/neww/uploads/{0}-{1}".format(random.randint(0, 10000), f.filename)
-        f.save(filename)
-        f_names.append(filename)
-    for file in f_names:
-        text = 'Операция успешно завершена'
+        file = "apps/neww/uploads/{0}-{1}".format(random.randint(0, 10000), f.filename)
+        f.save(file)
         if '.xml' in file:
-            result, error_kod = excel_todb.main(2, [file, 1], user['id'])
-            text, error_kod = excel_todb.main(3, [result[1], result[3], result[4], db(db.company.id == c).select()[0].id, 5], user['id'])
-        elif 'ІАР' in file:
-            result, error_kod = excel_todb.main(5, file, user['id'])
-            text, error_kod = excel_todb.main(3, [result, db(db.company.id == c).select()[0].id, 6], user['id'])
-        elif 'Розділ-3' in file:
-            quarter, year = int(file[0]), int(file[2:6])
-            result, error_kod = excel_todb.main(4, [file, 1, 100000], user['id'])
-            text, error_kod = excel_todb.main(3, [result[1], int(quarter), int(year), db(db.company.id == c).select()[0].id, 1], user['id'])
-        elif 'Розділ-4' in file:
-            quarter, year = int(file[0]), int(file[2:6])
-            result, error_kod = excel_todb.main(4, [file, 2, 100000], user['id'])
-            text, error_kod = excel_todb.main(3, [result[1], int(quarter), int(year), db(db.company.id == c).select()[0].id, 2], user['id'])
-        elif 'Журнал' in file:
-            result, error_kod = excel_todb.main(4, [file, 3, 100], user['id'])
-            text, error_kod = excel_todb.main(3, [result[1], db(db.company.id == c).select()[0].id, 3], user['id'])
-        elif 'Резерв' in file:
-            result, error_kod = excel_todb.main(4, [file, 4, 100], user['id'])
-            text, error_kod = excel_todb.main(3, [result[1], db(db.company.id == c).select()[0].id, 4], user['id'])
+            xml_doc = etree.parse(file)
+            try:
+                xmlschema.assertValid(xml_doc)
+                with open(file, 'r') as fil:
+                    root = etree.fromstringlist(fil, parser=html.HTMLParser(encoding='utf-8'))
+            except UnicodeDecodeError:
+                f_errors.loc[f_errors.shape[0]] = db(db.errors.kod == 1).select()[0].ua, file
+            except etree.XMLSyntaxError:
+                f_errors.loc[f_errors.shape[0]] = db(db.errors.kod == 1).select()[0].ua, file
+            except etree.DocumentInvalid:
+                f_errors.loc[f_errors.shape[0]] = db(db.errors.kod == 2).select()[0].ua, file
+            else:
+                date = 0
+                for h1 in root.getchildren():
+                    if h1.tag == "reportdate":
+                        date = h1.text
+                        break
+                    else:
+                        for h2 in h1.getchildren():
+                            if h2.tag == "reportdate":
+                                date = h2.text
+                                break
+                            else:
+                                for h3 in h2.getchildren():
+                                    if h3.tag == "reportdate":
+                                        date = h3.text
+                                        break
+                                    else:
+                                        for h4 in h3.getchildren():
+                                            if h4.tag == "reportdate":
+                                                date = h4.text
+                                                break
+                if date != 0:
+                    quarter, year = pd.to_datetime(date).quarter, pd.to_datetime(date).year
+                    files.loc[files.shape[0]] = {'filename': file, 'year': year, 'quarter': quarter, 'prior': 3}
         else:
-            pass
+            if 'ІАР' in file or 'IAP' in file or 'IAR' in file:
+                files.loc[files.shape[0]] = {'filename': file, 'year': '', 'quarter': '', 'prior': 1}
+            else:
+                quarter, year = int(f.filename[0]), int(f.filename[2:6])
+                if 'Розділ-3' in file or 'Розділ-4' in file:
+                    files.loc[files.shape[0]] = {'filename': file, 'year': year, 'quarter': quarter, 'prior': 2}
+                elif'Журнал' in file or 'Резерв' in file:
+                    files.loc[files.shape[0]] = {'filename': file, 'year': year, 'quarter': quarter, 'prior': 4}
+    files = files.sort_values(by=['prior', 'year', 'quarter'])
+    db(db.type.company_id == c).delete()
+    db(db.type_orig.company_id == c).delete()
+    db(db.payout.company_id == c).delete()
+    db(db.rezerv.company_id == c).delete()
+    for i in range(files.shape[0]):
+        text = 'Операция успешно завершена'
+        if files.iloc[i]['prior'] == 1:
+            result, error_kod = excel_todb.main(5, files.iloc[i]['filename'], user['id'])
+            text, error_kod = excel_todb.main(3, [result, db(db.company.id == c).select()[0].id, 6], user['id'])
+        elif files.iloc[i]['prior'] == 2:
+            if 'Розділ-3' in file:
+                result, error_kod = excel_todb.main(4, [files.iloc[i]['filename'], 1, 100000], user['id'])
+                text, error_kod = excel_todb.main(3, [result[1], files.iloc[i]['quarter'], files.iloc[i]['year'], c, 1], user['id'])
+            else:
+                result, error_kod = excel_todb.main(4, [files.iloc[i]['filename'], 1, 100000], user['id'])
+                text, error_kod = excel_todb.main(3, [result[1], files.iloc[i]['quarter'], files.iloc[i]['year'], c, 2], user['id'])
+        elif files.iloc[i]['prior'] == 3:
+            result, error_kod = excel_todb.main(2, [files.iloc[i]['filename'], 1], user['id'])
+            text, error_kod = excel_todb.main(3, [result[1], result[3], result[4], db(db.company.id == c).select()[0].id, 5], user['id'])
+        else:
+            if 'Журнал' in files.iloc[i]['filename']:
+                result, error_kod = excel_todb.main(4, [files.iloc[i]['filename'], 3, 100], user['id'])
+                text, error_kod = excel_todb.main(3, [result[1], c, 3], user['id'])
+            elif 'Резерв' in files.iloc[i]['filename']:
+                result, error_kod = excel_todb.main(4, [files.iloc[i]['filename'], 4, 100], user['id'])
+                text, error_kod = excel_todb.main(3, [result[1], c, 4], user['id'])
         if text != 'Операция успешно завершена':
-            error = db(db.errors.kod == error_kod).select()[0].ua + '  /// Ошибка произошла в файле {}'.format(file)
+            error = db(db.errors.kod == error_kod).select()[0].ua + '  /// Ошибка произошла в файле {}'.format(files.iloc[i]['filename'])
             break
         else:
             error = 'OK'
-    return dict(message=text, user=user, url='', error=error)
+    table = []
+    if error == 'OK':
+        table = pd.DataFrame(columns = ['type', 'payout', 'rezerv', 'quarter', 'year'])
+        for i in range(files['year'].max() - files['year'].min()+1):
+            for j in range(4):
+                table = [[True if len(db((db.type.company_id == c) & (db.type.year == i+files['year'].min()) & (db.type.quarter == j+1)).select()) > 0 else False],
+                [True if len(db((db.payout.company_id == c) & (db.payout.insurance_case_date.year == i+files['year'].min()) & (
+                    pd.to_datetime(str(db.payout.insurance_case_date), dayfirst = True).quarter == j+1)).select()) > 0 else False],
+                [True if len(db((db.rezerv.company_id == c) & (db.rezerv.insurance_case_date.year == i+files['year'].min()) & (
+                    db.rezerv.insurance_case_date == j+1)).select()) > 0 else False],
+                j+1, i+files['year'].min()]
+    log444.close()
+    return dict(message=text, user=user, url='', error=error, table=table)
 
 @action("convert",method="GET")
 @action.uses("convert.html", auth)
