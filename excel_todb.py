@@ -517,12 +517,11 @@ def payout_todb(df, table, k, user_id):
         else:
             c = False
     if c:
-        log444.write('1\n')
+        df.columns = [i for i in range(df.shape[1])]
         df_c = df.copy()
         for i1 in range(df.shape[0]):
             for i2 in range(df.shape[1]):
                 df_c[i2][i1] = 0
-        log444.write('2\n')
         for i1 in range(df.shape[0]):
             if i1 == 0: continue
             for i2 in range(6):
@@ -530,38 +529,38 @@ def payout_todb(df, table, k, user_id):
                     continue
                 elif i2 == 5 and table == 4:
                     i2 = 7
-                a = str(df[i2 + 3][i1])
-                log444.write('3\n')
-                for i in range(len(a)):
-                    if a[i] in ' . /_':
-                        a = a[:i] + '-' + a[i + 1:]
-                        df_c[i2 + 3][i1] = 1
-                log444.write('{}\n'.format(a))
-                if len(a) == 10 and len(a[:a.index('-')]) == 2:
-                    a = pd.to_datetime(a, dayfirst=True)
-                elif len(a) < 2:
-                    a = None
-                elif len(a) < 10:
-                    if a.index('-') < 2:
-                        a = '0' + a
-                    c = a[:2]
-                    a = a[3:]
-                    if a.index('-') < 2:
-                        a = '0' + a
-                    d = a[:2]
-                    a = a[3:]
-                    if len(a) < 4:
-                        a = '20' + a
-                    a = a + '-' + d + '-' + c
-                elif len(a) > 10:
-                    df_c = 2
-                log444.write('5\n')
-                try:
-                    a = pd.to_datetime(a, dayfirst=True)
-                except pd._libs.tslibs.parsing.DateParseError:
-                    pass
-                log444.write('6\n')
-                df[i2 + 3][i1] = a
+                if type(df[i2 + 3][i1]) != type(datetime.datetime(2000, 1, 1)):
+                    a = str(df[i2 + 3][i1])
+                    for i in range(len(a)):
+                        if a[i] in ' . /_':
+                            a = a[:i] + '-' + a[i + 1:]
+                            df_c[i2 + 3][i1] = 1
+                    log444.write('{0}    {1}\n'.format(a, table))
+                    if len(a) == 10 and len(a[:a.index('-')]) == 2:
+                        a = pd.to_datetime(a, dayfirst=True)
+                    elif len(a) < 2:
+                        a = None
+                    elif len(a) < 10:
+                        if a.index('-') < 2:
+                            a = '0' + a
+                        c = a[:2]
+                        a = a[3:]
+                        if a.index('-') < 2:
+                            a = '0' + a
+                        d = a[:2]
+                        a = a[3:]
+                        if len(a) < 4:
+                            a = '20' + a
+                        a = a + '-' + d + '-' + c
+                    elif len(a) > 10:
+                        df_c = 2
+                    try:
+                        a = pd.to_datetime(a, dayfirst=True)
+                    except pd._libs.tslibs.parsing.DateParseError:
+                        pass
+                    df[i2 + 3][i1] = a
+                else:
+                    df[i2 + 3][i1] = datetime.date(df[i2 + 3][i1].year, df[i2 + 3][i1].month, df[i2 + 3][i1].day)
         for i1 in range(df.shape[0]):
             if i1 == 0: continue
             for i2 in df.columns:
@@ -581,36 +580,32 @@ def payout_todb(df, table, k, user_id):
                         df_c[i2][i1] = 2
                         error = "OK Возникли проблемы с некоторыми ячейками (несоответсвующий формат данных)"
                 elif i2 == 0:
-                    a = str(df[i2][i1])
+                    a = str(df[i2][i1]).lower()
                     c = 0
                     for i in db(db.vid_strah).select():
                         m1 = [i.key1, i.key2, i.key3]
-                        m2 = [i.nkey1, i.nkey2, i.nkey3, i.nkey4, i.nkey5]
-                        c = True
+                        c = 0
                         for j in m1:
+                            log444.write('{}\n'.format(j))
                             if (j in a) == False:
                                 c = False
                                 break
                             elif j == None:
                                 break
-                        if c is False: continue
-                        for j in m2:
-                            if (j in a) == True:
-                                c = False
-                                break
-                            elif j == None:
-                                break
-                        if c is True:
+                        if c == 0:
                             c = i.id
                             break
+                    log444.write('{}\n'.format(c))
                     if c > 0:
                         a = db(db.vid_strah.id == c).select()[0].nbu_id
                     else:
                         df_c[i2][i1] = 2
                     df[i2][i1] = a
+                    log444.write('vid opredelen\n')
     else:
         error = "Не співпадає з прикладом. Використовуйте його як бланк"
         df = []
+    log444.write('THE_END!!!!!')
     log444.close()
     return error, df, df_c
 
@@ -815,13 +810,7 @@ def import_excel(data, user_id):
     if error == "OK":
         page = f.sheet_by_index(0)
         if table > 2:
-            t = []
-            for i1 in range(page.nrows):
-                if i1 == 0: continue
-                t.append([])
-                for i2 in range(page.ncols):
-                    t[-1].append(page.cell_value(i1, i2))
-            df = pd.DataFrame(t)
+            df = pd.read_excel(xl)
             result = payout_todb(df, table, k, user_id)
         else:
             if table == 1:
