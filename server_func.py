@@ -153,17 +153,23 @@ def db_toexcel(df, quarter, year, basa):
         ex = new_iar4()
         d = 8
     for i in range(df.shape[0]):
-        p_id = ir4_desc[ir4_desc['ekp'] == df.iloc[i]['ekp']][ir4_desc['h015'] == df.iloc[i]['h015']
-        ][ir4_desc['k030'] == df.iloc[i]['k030']][ir4_desc['z220'] == df.iloc[i]['z220']]['p_id']
+        if df.iloc[i]['ekp'][-2:] in ['07', '15', '16', '17', '18', '19', '25', '31', '32', '33', '34', '35', '38', '39', '40', '41', '43', '44', '45', '46', '51', '53', '54']:
+            p_id = ir4_desc[ir4_desc['ekp'] == df.iloc[i]['ekp']]['p_id']
+        else:
+            p_id = ir4_desc[ir4_desc['ekp'] == df.iloc[i]['ekp']][ir4_desc['h015'] == df.iloc[i]['h015']
+            ][ir4_desc['k030'] == df.iloc[i]['k030']][ir4_desc['z220'] == df.iloc[i]['z220']]['p_id']
         if len(p_id) == 0:
             pass
         else:
             p_id = int(p_id.iloc[0])
         if basa < 3:
             try:
-                nfp = vid_s[vid_s['nbu_id'] == str(df.iloc[i]['h011'])]['nfp_id'].iloc[0]
+                if str(df.iloc[i]['h011'])[0] == '0':
+                    nfp = vid_s[vid_s['nbu_id'] == str(df.iloc[i]['h011'])[1]]['nfp_id'].iloc[0]
+                else:
+                    nfp = vid_s[vid_s['nbu_id'] == str(df.iloc[i]['h011'])]['nfp_id'].iloc[0]
             except IndexError:
-                pass
+                log15.write('Che za nbu?!\n')
             else:
                 if nfp[0] == str(basa):
                     ex.loc[p_id][nfp] = df.iloc[i]['t100']
@@ -171,21 +177,12 @@ def db_toexcel(df, quarter, year, basa):
             try:
                 iar = vid_s[vid_s['nbu_id'] == str(int(df.iloc[i]['h011']))]['iar_kod'].iloc[0]
             except IndexError:
-                pass
+                log15.write('Che za iar?!\n')
             else:
-                if basa == 3 and df.iloc[i]['h011'] == '06':
-                    log15.write(str(iar)+'\n')
                 if basa == 3 and (iar[0] == 'д' or iar in ['н01', 'н02']):
                     ex.loc[p_id][iar] = df.iloc[i]['t100']
                 elif basa == 4 and (iar[0] == 'о' or iar in ['н03', 'н04', 'н05', 'н06', 'н07', 'н08', 'н09']):
                     ex.loc[p_id][iar] = df.iloc[i]['t100']
-    if basa == 3:
-        for i1 in range(6):
-            log15.write(str(df.sort_values(by=['h011']).iloc[i1].to_dict())+'\n')
-        log15.write(str(ex.loc[13][['д01', 'д02', 'д03', 'д04']]))
-        log15.write(str(ex.loc[50][['д01', 'д02', 'д03', 'д04']]))
-        log15.write(str(ex.loc[180][['д01', 'д02', 'д03', 'д04']]))
-        log15.write(str(ex.loc[200][['д01', 'д02', 'д03', 'д04']]))
     for i1 in ir4_desc['p_id']:
         ex['total'][i1] = 0
         for i2 in ex.columns[d:]:
