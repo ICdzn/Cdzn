@@ -38,12 +38,24 @@ users_block = {}
 for i in db(db.company_user).select():
     users_block[i.site_user] = 0
 
-
+def func():
+    df2 = pd.read_excel('ir4_description.xls').drop(columns=['Unnamed: 0'])
+    for i in range(df2.shape[0]):
+        m = {}
+        for j in df2.columns:
+            m[j] = df2[j][i]
+            if str(m[j]) == 'nan':
+                m[j] = None
+        db.ir4_description.insert(**m)
 
 @authenticated()
 @action.uses(auth)
 def index():
     user = auth.get_user()
+    log1 = open('log1.txt', 'w')
+    if len(db(db.ir4_description).select()) < 1:
+        func()
+    log1.close()
     log = open('history.log', 'a')
     log.write("User {0} ({1} {2}) in system at {3}\n".format(user['id'], user['first_name'], user['last_name'], datetime.datetime.today().time()))
     log.close()
@@ -135,17 +147,20 @@ def multi_up_get():
 
 @action("static/multi_upload",method="POST")
 @action.uses("result_page.html", auth)
-def convert_post():
+def multi_up_post():
     log444 = open('log444.txt', 'w')
     user = auth.get_user()
     c = request.POST['company']
     ff = request.files.getall('File')
+    for i in ff:
+        log444.write(str(i.filename)+'\n')
     xmlschema_doc = etree.parse("apps/neww/static/tir4.xsd")
     xmlschema = etree.XMLSchema(xmlschema_doc)
     f_errors = pd.DataFrame(columns=['filename', 'error'])
     files = pd.DataFrame(columns=['filename', 'year', 'quarter', 'prior'])
     for f in ff:
         file = "apps/neww/uploads/{0}-{1}".format(random.randint(0, 10000), f.filename)
+        log444.write(str(f.filename)+'\n')
         f.save(file)
         if '.xml' in file:
             xml_doc = etree.parse(file)
@@ -188,11 +203,12 @@ def convert_post():
                 files.loc[files.shape[0]] = {'filename': file, 'year': '', 'quarter': '', 'prior': 1}
             else:
                 quarter, year = int(f.filename[0]), int(f.filename[2:6])
-                if 'Розділ-3' in file or 'Розділ-4' in file:
+                if 'R-3' in file or 'R-4' in file:
                     files.loc[files.shape[0]] = {'filename': file, 'year': year, 'quarter': quarter, 'prior': 2}
-                elif'Журнал' in file or 'Резерв' in file:
+                elif'payout' in file or 'rezerv' in file:
                     files.loc[files.shape[0]] = {'filename': file, 'year': year, 'quarter': quarter, 'prior': 4}
     files = files.sort_values(by=['prior', 'year', 'quarter'])
+    log444.write(str(files))
     db(db.type.company_id == c).delete()
     db(db.type_orig.company_id == c).delete()
     db(db.payout.company_id == c).delete()
@@ -203,7 +219,7 @@ def convert_post():
             result, error_kod = excel_todb.main(5, files.iloc[i]['filename'], user['id'])
             text, error_kod = excel_todb.main(3, [result, db(db.company.id == c).select()[0].id, 6], user['id'])
         elif files.iloc[i]['prior'] == 2:
-            if 'Розділ-3' in file:
+            if 'R-3' in file:
                 result, error_kod = excel_todb.main(4, [files.iloc[i]['filename'], 1, 100000], user['id'])
                 text, error_kod = excel_todb.main(3, [result[1], files.iloc[i]['quarter'], files.iloc[i]['year'], c, 1], user['id'])
             else:
@@ -213,10 +229,10 @@ def convert_post():
             result, error_kod = excel_todb.main(2, [files.iloc[i]['filename'], 1], user['id'])
             text, error_kod = excel_todb.main(3, [result[1], result[3], result[4], db(db.company.id == c).select()[0].id, 5], user['id'])
         else:
-            if 'Журнал' in files.iloc[i]['filename']:
+            if 'payout' in files.iloc[i]['filename']:
                 result, error_kod = excel_todb.main(4, [files.iloc[i]['filename'], 3, 100], user['id'])
                 text, error_kod = excel_todb.main(3, [result[1], c, 3], user['id'])
-            elif 'Резерв' in files.iloc[i]['filename']:
+            elif 'rezerv' in files.iloc[i]['filename']:
                 result, error_kod = excel_todb.main(4, [files.iloc[i]['filename'], 4, 100], user['id'])
                 text, error_kod = excel_todb.main(3, [result[1], c, 4], user['id'])
         if text != 'Операция успешно завершена':
@@ -224,19 +240,34 @@ def convert_post():
             break
         else:
             error = 'OK'
-    table = []
-    if error == 'OK':
-        table = pd.DataFrame(columns = ['type', 'payout', 'rezerv', 'quarter', 'year'])
-        for i in range(files['year'].max() - files['year'].min()+1):
-            for j in range(4):
-                table = [[True if len(db((db.type.company_id == c) & (db.type.year == i+files['year'].min()) & (db.type.quarter == j+1)).select()) > 0 else False],
-                [True if len(db((db.payout.company_id == c) & (db.payout.insurance_case_date.year == i+files['year'].min()) & (
-                    pd.to_datetime(str(db.payout.insurance_case_date), dayfirst = True).quarter == j+1)).select()) > 0 else False],
-                [True if len(db((db.rezerv.company_id == c) & (db.rezerv.insurance_case_date.year == i+files['year'].min()) & (
-                    db.rezerv.insurance_case_date == j+1)).select()) > 0 else False],
-                j+1, i+files['year'].min()]
+        log444.write(str(error)+'\n')
+    df = []
+    q_min = y_min = 9999
+    q_max = y_max = 0
+    for i in db(db.type).select():
+        if i.year < y_min:
+            y_min = i.year
+            q_min = i.quarter
+        elif i.year > y_max:
+            y_max = i.year
+            q_max = i.quarter
+        elif i.year == y_min and i.quarter < q_min:
+            q_min = i.quarter
+        elif i.year == y_max and i.quarter > q_max:
+            q_max = i.quarter
+    df = pd.DataFrame(columns = ['type', 'payout', 'rezerv', 'quarter', 'year'])
+    for i in range((y_max-y_min)*4+q_max-q_min+1):
+        quarter = (q_min + i) % 4
+        if quarter == 0:
+            quarter = 4
+            year = y_min + int((q_min + i) / 4) - 1
+        else:
+            year = y_min + int((q_min + i) / 4)
+        df.loc[df.shape[0]] = [[True if len(db((db.type.company_id == c) & (db.type.year == year) & (db.type.quarter == quarter)).select()) > 0 else False]
+        , False, False, quarter, year]
+    log444.write(str(df))
     log444.close()
-    return dict(message=text, user=user, url='', error=error, table=table)
+    return dict(message=text, user=user, url='', error=error, table=df)
 
 @action("convert",method="GET")
 @action.uses("convert.html", auth)
@@ -331,6 +362,7 @@ def upload2_post():
         a = [result[1], db(db.company.id == c).select()[0].id, table]
         users_block[user['id']] = a
         log.close()
+    log111.write(str(result))
     log111.close()
     error = db(db.errors.kod == error_kod).select()[0].ua
     return dict(user=user, result_all=result, table=table, error=error)

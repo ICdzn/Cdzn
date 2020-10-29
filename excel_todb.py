@@ -278,12 +278,13 @@ def df_todb_ir4(data):
             db.type.insert(**m)
 
 def df_todb_payout(df, company_id, key):
+    log555 = open('log555.txt', 'w')
     for i1 in range(df.shape[0]):
         if i1 == 0: continue
         c = True
         m = {}
         for i2 in range(df.shape[1]):
-            m[db.payout.fields[i2 + 1]] = str(df[df.columns[i2]][i1])
+            m[db.payout.fields[i2 + 1]] = df[df.columns[i2]][i1]
         m['company_id'] = company_id
         try:
             if key == 1:
@@ -291,6 +292,7 @@ def df_todb_payout(df, company_id, key):
         except IndexError:
             pass
         else:
+            log555.write(str(m))
             querry = (db.payout.company_id == str(m['company_id'])) & (db.payout.statement_date == m['statement_date']) & (
                 db.payout.case_num == m['case_num']) & (db.payout.insurance_type == m['insurance_type'])
             try:
@@ -301,14 +303,16 @@ def df_todb_payout(df, company_id, key):
                 pass
             if c is True:
                 db.payout.insert(**m)
+    log555.close()
 
 def df_todb_rezerv(df, company_id, key):
+    log556 = open('log556.txt', 'w')
     for i1 in range(df.shape[0]):
         c = True
         if i1 == 0: continue
         m = {}
         for i2 in range(df.shape[1]):
-            m[db.rezerv.fields[i2 + 1]] = str(df[df.columns[i2]][i1])
+            m[db.rezerv.fields[i2 + 1]] = df[df.columns[i2]][i1]
         m['company_id'] = company_id
         try:
             if key == 1:
@@ -316,6 +320,7 @@ def df_todb_rezerv(df, company_id, key):
         except IndexError:
             pass
         else:
+            log556.write(str(m))
             querry = (db.rezerv.company_id == str(m['company_id'])) & (db.rezerv.statement_date == m['statement_date']) & (
                 db.rezerv.case_num == m['case_num']) & (db.rezerv.insurance_type == m['insurance_type'])
             try:
@@ -326,6 +331,7 @@ def df_todb_rezerv(df, company_id, key):
                 pass
             if c is True:
                 db.rezerv.insert(**m)
+    log556.close()
 
 def df_todb_nfp(data):
     if len(data) == 4:
@@ -352,7 +358,7 @@ def df_todb_nfp(data):
                 elif v38 == 1:
                     pass
                 else:
-                    m['t100'] = str(df[i2][i1])
+                    m['t100'] = int(float(df[i2][i1]))
                 c = True
                 querry = (db.type.id > 0) & (db.type.h011 == m['h011']) & (db.type.ekp == m['ekp']) & (
                             db.type.company_id == str(m['company_id'])) \
@@ -491,12 +497,6 @@ def payout_todb(df, table, k, user_id):
     log444 = open('log444.txt', 'w')
     user_errors[user_id] = 9
     error = "OK"
-    for i in df.columns:
-        if df[i].notnull().sum() == 0:
-            del df[i]
-    for i in range(df.shape[0]):
-        if df.loc[i].isnull().sum() > 0:
-            df.drop([i], inplace=True)
     if table == 3:
         f = xlrd.open_workbook('apps/neww/static/Журнал виплат.xlsx')
     else:
@@ -532,7 +532,7 @@ def payout_todb(df, table, k, user_id):
                 if type(df[i2 + 3][i1]) != type(datetime.datetime(2000, 1, 1)):
                     a = str(df[i2 + 3][i1])
                     for i in range(len(a)):
-                        if a[i] in ' . /_':
+                        if a[i] in ' ./_':
                             a = a[:i] + '-' + a[i + 1:]
                             df_c[i2 + 3][i1] = 1
                     log444.write('{0}    {1}\n'.format(a, table))
@@ -574,7 +574,7 @@ def payout_todb(df, table, k, user_id):
                         except IndexError:
                             pass
                     try:
-                        a = int(float(a) * 10 * k) / 10
+                        a = int(float(a) * k)
                         df[i2][i1] = a
                     except ValueError:
                         df_c[i2][i1] = 2
@@ -605,11 +605,12 @@ def payout_todb(df, table, k, user_id):
     else:
         error = "Не співпадає з прикладом. Використовуйте його як бланк"
         df = []
-    log444.write('THE_END!!!!!')
+    log444.write(str(df))
     log444.close()
     return error, df, df_c
 
 def iar_todf(xl, user_id):
+    log1 = open('log_iar.txt', 'w')
     error = "OK"
     result = []
     user_errors[user_id] = 3
@@ -732,10 +733,10 @@ def iar_todf(xl, user_id):
         result.append(["OK", df])
         user_errors[user_id] = 6
         page = f.sheet_by_name('виплати')
-        cols = db.payout.fields[1:-1]
+        cols = db.payout.fields[1:-2]
         df = pd.DataFrame(columns = cols)
         f_p = xlrd.open_workbook('apps/neww/static/Журнал виплат.xlsx')
-        df.loc[0] = f_p.sheet_by_index(0).row_values(1)[:len(db.payout.fields[1:-1])]
+        df.loc[0] = f_p.sheet_by_index(0).row_values(1)
         for i1 in range(page.nrows):
             if i1 < 2: continue
             m = {cols[0]: str(page.cell_value(i1, 12)), cols[1]: page.cell_value(i1, 1),
@@ -767,10 +768,10 @@ def iar_todf(xl, user_id):
         result.append(["OK", df])
         user_errors[user_id] = 7
         page = f.sheet_by_name('РЗ')
-        cols = db.rezerv.fields[1:-1]
+        cols = db.rezerv.fields[1:-2]
         df = pd.DataFrame(columns = cols)
         f_r = xlrd.open_workbook('apps/neww/static/Резерв заявлених збитків.xlsx')
-        df.loc[0] = f_r.sheet_by_index(0).row_values(1)[:len(db.rezerv.fields[1:-1])]
+        df.loc[0] = f_r.sheet_by_index(0).row_values(1)
         for i1 in range(page.nrows):
             if i1 < 2: continue
             m = {cols[0]: str(page.cell_value(i1, 10)), cols[1]: page.cell_value(i1, 1),
@@ -795,6 +796,8 @@ def iar_todf(xl, user_id):
         result.append(["OK", df])
     else:
         result = [[error, []]]
+    log1.write(str(result))
+    log1.close()
     return result
 
 def import_excel(data, user_id):

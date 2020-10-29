@@ -9,8 +9,8 @@
 	<table align="center">
 		<th>
 			<td align="center">3 та 4 Розділ</td>
-			<td align="center">Журнал Виплат</td>
-			<td align="center">Резерв Заявлених Збитків</td>
+			<td align="center">Журнал виплат</td>
+			<td align="center">РЕЗ</td>
 			<td align="center">Квартал</td>
 			<td align="center">Рік</td>
 		</th>
@@ -19,8 +19,8 @@
 			[[for j in range(5):]]
 				<td align="center">
 				[[if j > 2:]]
-					[[=(table.iloc[i][table.columns[j]])]]
-				[[elif table.iloc[i][table.columns[j]] == True:]]
+					[[=(table.iloc[i][(table.columns[j])])]]
+				[[elif table.iloc[i][(table.columns[j])] == True:]]
 					<img src="yes.png">
 				[[else:]]
 					<img src="no.png">
@@ -30,6 +30,7 @@
 			</tr>
 		[[pass]]
 	</table>
+
 [[else:]]
-	<p align="center">[[=error]]</p>
+	<p align="center">[[=message]]</p>
 [[pass]]

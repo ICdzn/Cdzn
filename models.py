@@ -1,5 +1,6 @@
 from .common import db, Field
 from pydal.validators import *
+import datetime
 
 db.define_table('company',
                 Field('IAN_FULL_NAME'),
@@ -52,7 +53,8 @@ db.define_table('type',
                 Field('t100', type='integer'),
                 Field('quarter', type='integer'),
                 Field('year', type='integer'),
-                Field('company_id', 'reference company'))
+                Field('company_id', 'reference company'),
+                Field('upload_date', type='datetime', default = datetime.date.today()))
 db.define_table('type_orig',
                 Field('ekp', type='string'),
                 Field('h011', 'reference vid_strah'),
@@ -62,7 +64,8 @@ db.define_table('type_orig',
                 Field('t100', type='integer'),
                 Field('quarter', type='integer'),
                 Field('year', type='integer'),
-                Field('company_id', 'reference company'))
+                Field('company_id', 'reference company'),
+                Field('upload_date', type='datetime', default = datetime.date.today()))
 db.define_table('payout',
                 Field('insurance_type', 'reference vid_strah'),
                 Field('contract_num', type='string'),
@@ -72,9 +75,10 @@ db.define_table('payout',
                 Field('requirement_date', type='datetime'),
                 Field('insurance_act_date', type='datetime'),
                 Field('insurance_payment_date', type='datetime'),
-                Field('insurance_payment_size', type='string'),
-                Field('settlement_costs', type='string'),
-                Field('company_id', 'reference company'))
+                Field('insurance_payment_size', type='integer'),
+                Field('settlement_costs', type='integer'),
+                Field('company_id', 'reference company'),
+                Field('upload_date', type='datetime', default = datetime.date.today()))
 db.define_table('rezerv',
                 Field('insurance_type', 'reference vid_strah'),
                 Field('contract_num', type='string'),
@@ -84,8 +88,9 @@ db.define_table('rezerv',
                 Field('requirement_date', type='datetime'),
                 Field('insurance_act_date', type='datetime'),
                 Field('insurance_payment_date', type='datetime'),
-                Field('insurance_payment_size', type='string'),
-                Field('reserve_size', type='string'),
+                Field('insurance_payment_size', type='integer'),
+                Field('reserve_size', type='integer'),
                 Field('insert_date', type='datetime'),
-                Field('company_id', 'reference company'))
+                Field('company_id', 'reference company'),
+                Field('upload_date', type='datetime', default = datetime.date.today()))
 db.commit()
