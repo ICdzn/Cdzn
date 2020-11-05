@@ -255,7 +255,6 @@ def multi_up_post():
             q_min = i.quarter
         elif i.year == y_max and i.quarter > q_max:
             q_max = i.quarter
-    df = pd.DataFrame(columns = ['type', 'payout', 'rezerv', 'quarter', 'year'])
     for i in range((y_max-y_min)*4+q_max-q_min+1):
         quarter = (q_min + i) % 4
         if quarter == 0:
@@ -263,11 +262,22 @@ def multi_up_post():
             year = y_min + int((q_min + i) / 4) - 1
         else:
             year = y_min + int((q_min + i) / 4)
-        df.loc[df.shape[0]] = [[True if len(db((db.type.company_id == c) & (db.type.year == year) & (db.type.quarter == quarter)).select()) > 0 else False]
-        , False, False, quarter, year]
+        m = {'quarter': quarter, 'year': year}
+        m['type'] = [True if len(db((db.type.company_id == c) & (db.type.year == year) & (db.type.quarter == quarter)).select()) > 0 else False]
+        m['payout'] = False
+        for z in db((db.payout.company_id == c) & (db.payout.insurance_payment_date != None)).select():
+            if z.insurance_payment_date.year == year and z.insurance_payment_date.month in [quarter*3, quarter*3-1, quarter*3-2]:
+                m['payout'] = True
+                break
+        m['rezerv'] = False
+        for z in db((db.rezerv.company_id == c) & (db.rezerv.insert_date != None)).select():
+            if z.insert_date.year == year and z.insert_date.month in [quarter*3, quarter*3-1, quarter*3-2]:
+                m['rezerv'] = True
+                break
+        df.append(m)
     log444.write(str(df))
     log444.close()
-    return dict(message=text, user=user, url='', error=error, table=df)
+    return dict(message=text, user=user, url='', error=error, df=df)
 
 @action("convert",method="GET")
 @action.uses("convert.html", auth)
@@ -373,7 +383,7 @@ def index():
     user = auth.get_user()
     text, error_kod = excel_todb.main(3, users_block[user['id']], user['id'])
     error = db(db.errors.kod == error_kod).select()[0].ua
-    return dict(message=text, user=user, url='', error=error)
+    return dict(message=text, user=user, url='', error=error, df=[])
 
 @action("add_company",method="GET")
 @action.uses("add_company_page.html", auth)

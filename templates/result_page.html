@@ -3,34 +3,46 @@
 	<p align="center">Для скачування файлу натисніть<a href="[[=url]]" download> сюди</a></p>
 [[elif message == "Операция успешно завершена":]]
 	<p align="center">Операция успешно завершена</p>
-[[elif message[:26] == "Операция успешно завершена" and table != ([]):]]
-	<p align="center">Операция успешно завершена</p><br>
-	<p align="center">В базе есть данные по таким периодам</p><br>
-	<table align="center">
-		<th>
-			<td align="center">3 та 4 Розділ</td>
-			<td align="center">Журнал виплат</td>
-			<td align="center">РЕЗ</td>
-			<td align="center">Квартал</td>
-			<td align="center">Рік</td>
-		</th>
-		[[for i in range(table.shape[0]):]]
-			<tr>
-			[[for j in range(5):]]
-				<td align="center">
-				[[if j > 2:]]
-					[[=(table.iloc[i][(table.columns[j])])]]
-				[[elif table.iloc[i][(table.columns[j])] == True:]]
-					<img src="yes.png">
-				[[else:]]
-					<img src="no.png">
+		[[if df != ([]):]]
+			<table align="center" width="40%">
+				<th>
+				<td align="center">3 та 4 Розділ</td>
+				<td align="center">Журнал виплат</td>
+				<td align="center">РЕЗ</td>
+				<td align="center">Квартал</td>
+				<td align="center">Рік</td>
+				</th>
+				[[for i in df:]]
+					<tr>
+					<td></td>
+					<td align="center">
+					[[if i['type'] == True:]]
+						✅
+					[[else:]]
+						❌
+					[[pass]]
+					</td>
+					<td align="center">
+					[[if i['payout'] == True:]]
+						✅
+					[[else:]]
+						❌
+					[[pass]]
+					</td>
+					<td align="center">
+					[[if i['rezerv'] == True:]]
+						✅
+					[[else:]]
+						❌
+					[[pass]]
+					</td>
+					<td align="center">[[=(i['quarter'])]]</td>
+					<td align="center">[[=(i['year'])]]</td>
+					</tr>
 				[[pass]]
-				</td>
-			[[pass]]
-			</tr>
+			</table>
+		[[else:]]
 		[[pass]]
-	</table>
-
 [[else:]]
 	<p align="center">[[=message]]</p>
 [[pass]]
