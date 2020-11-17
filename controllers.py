@@ -48,6 +48,7 @@ def func():
                 m[j] = None
         db.ir4_description.insert(**m)
 
+
 @authenticated()
 @action.uses(auth)
 def index():
@@ -263,7 +264,9 @@ def multi_up_post():
         else:
             year = y_min + int((q_min + i) / 4)
         m = {'quarter': quarter, 'year': year}
-        m['type'] = [True if len(db((db.type.company_id == c) & (db.type.year == year) & (db.type.quarter == quarter)).select()) > 0 else False]
+        m['type'] = False
+        if len(db((db.type.company_id == c) & (db.type.year == year) & (db.type.quarter == quarter)).select()) > 0:
+            m['type'] = True
         m['payout'] = False
         for z in db((db.payout.company_id == c) & (db.payout.insurance_payment_date != None)).select():
             if z.insurance_payment_date.year == year and z.insurance_payment_date.month in [quarter*3, quarter*3-1, quarter*3-2]:
@@ -334,7 +337,7 @@ def upload2_post():
     if table < 3:
         quarter=int(request.POST['quarter'])
         year=int(request.POST['year'])
-    if table != 6:
+    if table != 7:
         k=int(request.POST['k'])
     f = request.files["File"]
     filename = "apps/neww/uploads/{0}-{1}".format(random.randint(0, 10000), f.filename)
@@ -358,7 +361,16 @@ def upload2_post():
         log.close()
     elif table == 6:
         log = open('history.log', 'a')
-        result, error_kod = excel_todb.main(5, filename, user['id'])
+        result, error_kod = excel_todb.main(5, [filename, k], user['id'])
+        log111.write(str(result))
+        log.write("User_id: {0};\tuploaded file: {1};\tcompany_id: {2},\tquarter: {3};\tyear: {4};\n".format(
+            user['id'], filename, c, result[3], result[4]))
+        a = [result[1], result[3], result[4], db(db.company.id == c).select()[0].id, table]
+        users_block[user['id']] = a
+        log.close()
+    elif table == 7:
+        log = open('history.log', 'a')
+        result, error_kod = excel_todb.main(6, filename, user['id'])
         log.write("User_id: {0};\tuploaded file: {1};\tcompany_id: {2}\n".format(
             user['id'], filename, c))
         a = [result, db(db.company.id == c).select()[0].id, table]

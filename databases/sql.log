@@ -145,3 +145,25 @@ CREATE TABLE "rezerv"(
     "upload_date" TIMESTAMP
 );
 success!
+timestamp: 2020-11-12T12:33:10.062099
+CREATE TABLE "fr1_description"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "f061" CHAR(512),
+    "h001" CHAR(512)
+);
+success!
+timestamp: 2020-11-12T13:15:39.253829
+CREATE TABLE "fr1"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "t100_1" INTEGER,
+    "t100_2" INTEGER,
+    "f061" CHAR(512),
+    "h001" CHAR(512),
+    "quarter" INTEGER,
+    "year" INTEGER,
+    "company_id" INTEGER REFERENCES "company" ("id") ON DELETE CASCADE  ,
+    "upload_date" TIMESTAMP
+);
+success!

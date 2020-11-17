@@ -251,6 +251,94 @@ def parseXML(data, user_id):
     log11.close()
     return result
 
+def parse_fr1(data, user_id):
+    log11 = open('log21.txt', 'w')
+    [xml, k] = data
+    user_errors[user_id] = 2
+    error = "OK"
+    df = []
+    df_c = []
+    xmlschema_doc = etree.parse("apps/neww/static/FR1.xsd")
+    xmlschema = etree.XMLSchema(xmlschema_doc)
+    xml_doc = etree.parse(xml)
+    try:
+        xmlschema.assertValid(xml_doc)
+        with open(xml, 'r') as file:
+            root = etree.fromstringlist(file, parser=html.HTMLParser(encoding='utf-8'))
+    except UnicodeDecodeError:
+        error = "Неподходящий формат. Загрузите файл с росширением .xml"
+        user_errors[user_id] = 1
+    except etree.XMLSyntaxError:
+        error = "Неподходящий формат. Загрузите файл с росширением .xml"
+        user_errors[user_id] = 1
+    except etree.DocumentInvalid:
+        error = "Файл не прошел проверку. Свертесь с правилами состовления файла"
+    if error == "OK":
+        cols = ['ekp', 't100_1', 't100_2', 'f061', 'h001']
+        df = pd.DataFrame(columns=cols)
+        a = {}
+        [a.update({i: 0}) for i in cols]
+        for h1 in root.getchildren():
+            log11.write("1-{}\n".format(h1.tag))
+            if h1.tag == "reportdate":
+                date = h1.text
+            m = {}
+            for h2 in h1.getchildren():
+                log11.write("2-{}\n".format(h2.tag))
+                if h2.tag == "reportdate":
+                    date = h2.text
+                if h2.tag in cols:
+                    m[h2.tag] = h2.text
+                else:
+                    m = {}
+                    for h3 in h2.getchildren():
+                        log11.write("3-{}\n".format(h3.tag))
+                        if h3.tag == "reportdate":
+                            date = h3.text
+                        if h3.tag in cols:
+                            m[h3.tag] = h3.text
+                        else:
+                            m = {}
+                            for h4 in h3.getchildren():
+                                log11.write("4-{}\n".format(h4.tag))
+                                if h4.tag == "reportdate":
+                                    date = h4.text
+                                if h4.tag in cols:
+                                    m[h4.tag] = h4.text
+                                else:
+                                    m = {}
+                                    for h5 in h4.getchildren():
+                                        log11.write("5-{}\n".format(h5.tag))
+                                        if h5.tag in cols:
+                                            m[h5.tag] = h5.text
+                                    if m != {}:
+                                        m['t100_1'] = float(m['t100_1']) * k
+                                        m['t100_2'] = float(m['t100_1']) * k
+                                        df.loc[df.shape[0]] = m
+                                        m = {}
+                            if m != {}:
+                                m['t100_1'] = float(m['t100_1']) * k
+                                m['t100_2'] = float(m['t100_1']) * k
+                                df.loc[df.shape[0]] = m
+                                m = {}
+                    if m != {}:
+                        m['t100_1'] = float(m['t100_1']) * k
+                        m['t100_2'] = float(m['t100_1']) * k
+                        df.loc[df.shape[0]] = m
+                        m = {}
+            if m != {}:
+                m['t100_1'] = float(m['t100_1']) * k
+                m['t100_2'] = float(m['t100_1']) * k
+                df.loc[df.shape[0]] = m
+    quarter, year = pd.to_datetime(date, dayfirst=True).quarter, pd.to_datetime(date).year
+    if error == "OK":
+        df_c = df.copy()
+        for i1 in range(df.shape[0]):
+            df_c.iloc[i1] = a
+    result = [error, df, df_c, quarter, year]
+    log11.close()
+    return result
+
 def df_todb_ir4(data):
     if len(data) == 4:
         [df, quarter, year, company_id] = data
@@ -276,6 +364,32 @@ def df_todb_ir4(data):
             break
         if c is True:
             db.type.insert(**m)
+
+def df_todb_fr1(data):
+    if len(data) == 4:
+        [df, quarter, year, company_id] = data
+    else:
+        [df, company_id] = data
+    for i1 in range(df.shape[0]):
+        m = {}
+        if len(data) == 4:
+            m['quarter'] = quarter
+            m['year'] = year
+        m['company_id'] = company_id
+        for i2 in df.columns:
+            m[i2] = str(df.iloc[i1][i2])
+        m['t100_1'] = float(m['t100_1'])
+        m['t100_2'] = float(m['t100_2'])
+        c = True
+        querry = (db.fr1.id > 0) & (db.fr1.h001 == m['h001']) & (db.fr1.ekp == m['ekp']) & (
+                    db.fr1.company_id == str(m['company_id'])) & (db.fr1.f061 == m['f061']) \
+                 & (db.fr1.year == str(m['year'])) & (db.fr1.quarter == str(m['quarter']))
+        for i in db(querry).select():
+            i.update_record(**m)
+            c = False
+            break
+        if c is True:
+            db.fr1.insert(**m)
 
 def df_todb_payout(df, company_id, key):
     log555 = open('log555.txt', 'w')
@@ -407,7 +521,7 @@ def df_todb(result, user_id):
     else:
         company_id = result[1]
         table = result[2]
-        if table == 6:
+        if table == 7:
             df1 = result[0][0][1]
             df2 = result[0][1][1]
             df3 = result[0][2][1]
@@ -456,6 +570,8 @@ def df_todb(result, user_id):
                     except KeyError:
                         db.type_orig.update_record(**m)
     elif table == 6:
+        df_todb_fr1([df, quarter, year, company_id])
+    elif table == 7:
         df_todb_iar(df1, company_id)
         df_todb_iar(df2, company_id)
         df_todb_payout(df3, company_id, 1)
@@ -886,6 +1002,9 @@ def main(key, data, user_id):
         elif key == 4:
             f = ["Неизвестная ошибка", [], []]
             f = import_excel(data, user_id)
+        elif key == 5:
+            f = ["Неизвестная ошибка", [], []]
+            f = parse_fr1(data, user_id)
         else:
             f = [["Неизвестная ошибка", []]]
             f = iar_todf(data, user_id)
