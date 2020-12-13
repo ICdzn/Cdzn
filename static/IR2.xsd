@@ -1,0 +1,159 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:annotation>
+<xs:documentation>IR2 Дані про доходи та витрати страховика</xs:documentation>
+<xs:appinfo>Published: 08.07.2020 19:11:44</xs:appinfo>
+<xs:appinfo>Start date: 01.07.2020</xs:appinfo>
+</xs:annotation>
+<xs:simpleType name="CTREPORTDATE">
+<xs:restriction base="xs:token">
+<xs:pattern value="(0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.\d\d\d\d"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="CTKOD_EKP">
+<xs:annotation>
+<xs:documentation>Код показника</xs:documentation>
+</xs:annotation>
+<xs:restriction base="xs:string">
+<xs:enumeration value="IR20001"> </xs:enumeration>
+<xs:enumeration value="IR20002"> </xs:enumeration>
+<xs:enumeration value="IR20003"> </xs:enumeration>
+<xs:enumeration value="IR20004"> </xs:enumeration>
+<xs:enumeration value="IR20005"> </xs:enumeration>
+<xs:enumeration value="IR20006"> </xs:enumeration>
+<xs:enumeration value="IR20007"> </xs:enumeration>
+<xs:enumeration value="IR20008"> </xs:enumeration>
+<xs:enumeration value="IR20009"> </xs:enumeration>
+<xs:enumeration value="IR20010"> </xs:enumeration>
+<xs:enumeration value="IR20011"> </xs:enumeration>
+<xs:enumeration value="IR20012"> </xs:enumeration>
+<xs:enumeration value="IR20013"> </xs:enumeration>
+<xs:enumeration value="IR20014"> </xs:enumeration>
+<xs:enumeration value="IR20015"> </xs:enumeration>
+<xs:enumeration value="IR20016"> </xs:enumeration>
+<xs:enumeration value="IR20017"> </xs:enumeration>
+<xs:enumeration value="IR20018"> </xs:enumeration>
+<xs:enumeration value="IR20019"> </xs:enumeration>
+<xs:enumeration value="IR20020"> </xs:enumeration>
+<xs:enumeration value="IR20021"> </xs:enumeration>
+<xs:enumeration value="IR20022"> </xs:enumeration>
+<xs:enumeration value="IR20023"> </xs:enumeration>
+<xs:enumeration value="IR20024"> </xs:enumeration>
+<xs:enumeration value="IR20025"> </xs:enumeration>
+<xs:enumeration value="IR20026"> </xs:enumeration>
+<xs:enumeration value="IR20027"> </xs:enumeration>
+<xs:enumeration value="IR20028"> </xs:enumeration>
+<xs:enumeration value="IR20029"> </xs:enumeration>
+<xs:enumeration value="IR20030"> </xs:enumeration>
+<xs:enumeration value="IR20031"> </xs:enumeration>
+<xs:enumeration value="IR20032"> </xs:enumeration>
+<xs:enumeration value="IR20033"> </xs:enumeration>
+<xs:enumeration value="IR20034"> </xs:enumeration>
+<xs:enumeration value="IR20035"> </xs:enumeration>
+<xs:enumeration value="IR20036"> </xs:enumeration>
+<xs:enumeration value="IR20037"> </xs:enumeration>
+<xs:enumeration value="IR20038"> </xs:enumeration>
+<xs:enumeration value="IR20039"> </xs:enumeration>
+<xs:enumeration value="IR20040"> </xs:enumeration>
+<xs:enumeration value="IR20041"> </xs:enumeration>
+<xs:enumeration value="IR20042"> </xs:enumeration>
+<xs:enumeration value="IR20043"> </xs:enumeration>
+<xs:enumeration value="IR20044"> </xs:enumeration>
+<xs:enumeration value="IR20045"> </xs:enumeration>
+<xs:enumeration value="IR20046"> </xs:enumeration>
+<xs:enumeration value="IR20047"> </xs:enumeration>
+<xs:enumeration value="IR20048"> </xs:enumeration>
+<xs:enumeration value="IR20049"> </xs:enumeration>
+<xs:enumeration value="IR20050"> </xs:enumeration>
+<xs:enumeration value="IR20051"> </xs:enumeration>
+<xs:enumeration value="IR20052"> </xs:enumeration>
+<xs:enumeration value="IR20053"> </xs:enumeration>
+<xs:enumeration value="IR20054"> </xs:enumeration>
+<xs:enumeration value="IR20055"> </xs:enumeration>
+<xs:enumeration value="IR20056"> </xs:enumeration>
+<xs:enumeration value="IR20057"> </xs:enumeration>
+<xs:enumeration value="IR20058"> </xs:enumeration>
+<xs:enumeration value="IR20059"> </xs:enumeration>
+<xs:enumeration value="IR20060"> </xs:enumeration>
+<xs:enumeration value="IR20061"> </xs:enumeration>
+<xs:enumeration value="IR20062"> </xs:enumeration>
+<xs:enumeration value="IR20063"> </xs:enumeration>
+<xs:enumeration value="IR20064"> </xs:enumeration>
+<xs:enumeration value="IR20065"> </xs:enumeration>
+<xs:enumeration value="IR20066"> </xs:enumeration>
+<xs:enumeration value="IR20067"> </xs:enumeration>
+<xs:enumeration value="IR20068"> </xs:enumeration>
+<xs:enumeration value="IR20069"> </xs:enumeration>
+<xs:enumeration value="IR20070"> </xs:enumeration>
+<xs:enumeration value="IR20071"> </xs:enumeration>
+<xs:enumeration value="IR20072"> </xs:enumeration>
+<xs:enumeration value="IR20073"> </xs:enumeration>
+<xs:enumeration value="IR20074"> </xs:enumeration>
+<xs:enumeration value="IR20075"> </xs:enumeration>
+<xs:enumeration value="IR20076"> </xs:enumeration>
+<xs:enumeration value="IR20077"> </xs:enumeration>
+<xs:enumeration value="IR20078"> </xs:enumeration>
+<xs:enumeration value="IR20079"> </xs:enumeration>
+<xs:enumeration value="IR20080"> </xs:enumeration>
+<xs:enumeration value="IR20081"> </xs:enumeration>
+<xs:enumeration value="IR20082"> </xs:enumeration>
+<xs:enumeration value="IR20083"> </xs:enumeration>
+<xs:enumeration value="IR20084"> </xs:enumeration>
+<xs:enumeration value="IR20085"> </xs:enumeration>
+<xs:enumeration value="IR20086"> </xs:enumeration>
+<xs:enumeration value="IR20087"> </xs:enumeration>
+<xs:enumeration value="IR20088"> </xs:enumeration>
+<xs:enumeration value="IR20089"> </xs:enumeration>
+<xs:enumeration value="IR20090"> </xs:enumeration>
+<xs:enumeration value="IR20091"> </xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+<xs:element name="NBUSTATREPORT">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="HEAD">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="STATFORM">
+<xs:simpleType>
+<xs:restriction base="xs:string">
+<xs:enumeration value="FIR2"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:element>
+<xs:element name="EDRPOU" type="xs:string">
+<xs:annotation>
+<xs:documentation>EDRPOU</xs:documentation>
+</xs:annotation>
+</xs:element>
+<xs:element name="REPORTDATE" type="CTREPORTDATE">
+<xs:annotation>
+<xs:documentation>Звітна дата</xs:documentation>
+</xs:annotation>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="DATA" minOccurs="0" maxOccurs="unbounded">
+<xs:complexType>
+<xs:all>
+<xs:element name="EKP" type="CTKOD_EKP">
+<xs:annotation>
+<xs:documentation>Код показника</xs:documentation>
+</xs:annotation>
+</xs:element>
+<xs:element name="T070" type="xs:long">
+<xs:annotation>
+<xs:documentation>Сума</xs:documentation>
+</xs:annotation>
+</xs:element>
+</xs:all>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:unique name="EKPMustBeUnique">
+<xs:selector xpath="DATA"/>
+<xs:field xpath="EKP"/>
+</xs:unique>
+</xs:element>
+</xs:schema>

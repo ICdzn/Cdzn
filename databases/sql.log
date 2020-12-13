@@ -167,3 +167,125 @@ CREATE TABLE "fr1"(
     "upload_date" TIMESTAMP
 );
 success!
+timestamp: 2020-12-03T00:23:07.951588
+CREATE TABLE "nbu_tables"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "metric" TEXT,
+    "param" TEXT
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2020-12-03T06:03:44.947052
+CREATE TABLE "FR0"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "T100_1" INTEGER,
+    "T100_2" INTEGER,
+    "F061" CHAR(512),
+    "F110" CHAR(512),
+    "H001" CHAR(512),
+    "quarter" INTEGER,
+    "year" INTEGER,
+    "company_id" INTEGER REFERENCES "company" ("id") ON DELETE CASCADE  ,
+    "upload_date" TIMESTAMP
+);
+success!
+timestamp: 2020-12-03T06:03:45.136330
+CREATE TABLE "FR0_description"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "F061" CHAR(512),
+    "F110" CHAR(512),
+    "H001" CHAR(512)
+);
+success!
+timestamp: 2020-12-03T06:13:54.285923
+CREATE TABLE "nbu_tables"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "metric" CHAR(512),
+    "param" CHAR(512)
+);
+success!
+timestamp: 2020-12-03T06:33:48.321502
+CREATE TABLE "nbu_tables"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "metric" CHAR(512),
+    "param" CHAR(512)
+);
+success!
+timestamp: 2020-12-03T06:35:17.332635
+CREATE TABLE "FR1"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "t100_1" INTEGER,
+    "t100_2" INTEGER,
+    "F061" CHAR(512),
+    "H001" CHAR(512),
+    "quarter" INTEGER,
+    "year" INTEGER,
+    "company_id" INTEGER REFERENCES "company" ("id") ON DELETE CASCADE  ,
+    "upload_date" TIMESTAMP
+);
+timestamp: 2020-12-03T06:37:41.230628
+CREATE TABLE "FR1"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "t100_1" INTEGER,
+    "t100_2" INTEGER,
+    "F061" CHAR(512),
+    "H001" CHAR(512),
+    "quarter" INTEGER,
+    "year" INTEGER,
+    "company_id" INTEGER REFERENCES "company" ("id") ON DELETE CASCADE  ,
+    "upload_date" TIMESTAMP
+);
+timestamp: 2020-12-03T06:46:40.629431
+CREATE TABLE "nbu_tables"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" CHAR(512),
+    "metric" CHAR(512),
+    "param" CHAR(512)
+);
+success!
+success!
+success!
+timestamp: 2020-12-10T02:39:05.665732
+CREATE TABLE "FR0"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "t100_1" INTEGER,
+    "t100_2" INTEGER,
+    "F061" CHAR(512),
+    "F110" CHAR(512),
+    "H001" CHAR(512),
+    "quarter" INTEGER,
+    "year" INTEGER,
+    "company_id" INTEGER REFERENCES "company" ("id") ON DELETE CASCADE  ,
+    "upload_date" TIMESTAMP
+);
+success!
+timestamp: 2020-12-10T02:39:05.818654
+CREATE TABLE "FR0_description"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "ekp" CHAR(512),
+    "F061" CHAR(512),
+    "F110" CHAR(512),
+    "H001" CHAR(512)
+);
+success!
+timestamp: 2020-12-12T23:47:32.382274
+CREATE TABLE "ir2_description"(
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "p_id" INTEGER,
+    "ekp" CHAR(512)
+);
+success!

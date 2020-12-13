@@ -1,0 +1,12 @@
+[[extend "layout.html"]]
+<form method="post" action="add_table" enctype="multipart/form-data">
+Вкажіть назву таблиці за форматом НБУ:<br>
+<input type="text" name="name"><br>
+Вкажіть основний файл:<br>
+<input type="file" name="File"><br>
+Вкажіть файл з перевірочною схемою:<br>
+<input type="file" name="schema" accept=".xsd"><br>
+Вкажіть файли з ключами:<br>
+<input type="file" name="Keys" accept=".xml, .xls, .xlsx" required multiple><br>
+<input type="submit">
+</form>

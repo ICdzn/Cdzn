@@ -251,17 +251,39 @@ def parseXML(data, user_id):
     log11.close()
     return result
 
-def parse_fr1(data, user_id):
+def parse_nbu(data, user_id):
     log11 = open('log21.txt', 'w')
-    [xml, k] = data
+    [xml, table, k] = data
     user_errors[user_id] = 2
     error = "OK"
     df = []
     df_c = []
-    xmlschema_doc = etree.parse("apps/neww/static/FR1.xsd")
-    xmlschema = etree.XMLSchema(xmlschema_doc)
-    xml_doc = etree.parse(xml)
+    row = db(db.nbu_tables).select()[table-1]
+    name = row.name
+    T_list = []
+    s = row.metric
+    while s.count(';') > 0:
+        T_list.append(s[:s.index(';')])
+        s = s[s.index(';')+2:]
+    T_list.append(s)
+    log11.write(str(xml)+'\n')
+    param = []
+    if row.param != '':
+        s = row.param
+        while s.count(';') > 0:
+            param.append(s[:s.index(';')])
+            s = s[s.index(';')+2:]
+        param.append(s)
+    log11.write(str(param)+'----\n')
     try:
+        xmlschema_doc = etree.parse("apps/neww/static/{}.xsd".format(name))
+        log11.write('1')
+        xmlschema = etree.XMLSchema(xmlschema_doc)
+        log11.write('2')
+    except lxml.etree.XMLSyntaxError:
+        pass
+    try:
+        xml_doc = etree.parse(xml)
         xmlschema.assertValid(xml_doc)
         with open(xml, 'r') as file:
             root = etree.fromstringlist(file, parser=html.HTMLParser(encoding='utf-8'))
@@ -273,9 +295,13 @@ def parse_fr1(data, user_id):
         user_errors[user_id] = 1
     except etree.DocumentInvalid:
         error = "Файл не прошел проверку. Свертесь с правилами состовления файла"
+    except lxml.etree.XMLSyntaxError:
+        error = "Файл не прошел проверку. Свертесь с правилами состовления файла"
+    log11.write("{}\n".format(error))
     if error == "OK":
-        cols = ['ekp', 't100_1', 't100_2', 'f061', 'h001']
+        cols = ['ekp'] + param + T_list
         df = pd.DataFrame(columns=cols)
+        log11.write(str(cols)+'\n')
         a = {}
         [a.update({i: 0}) for i in cols]
         for h1 in root.getchildren():
@@ -312,23 +338,23 @@ def parse_fr1(data, user_id):
                                         if h5.tag in cols:
                                             m[h5.tag] = h5.text
                                     if m != {}:
-                                        m['t100_1'] = float(m['t100_1']) * k
-                                        m['t100_2'] = float(m['t100_1']) * k
+                                        for i in T_list:
+                                            m[i] = float(m[i]) * k
                                         df.loc[df.shape[0]] = m
                                         m = {}
                             if m != {}:
-                                m['t100_1'] = float(m['t100_1']) * k
-                                m['t100_2'] = float(m['t100_1']) * k
+                                for i in T_list:
+                                    m[i] = float(m[i]) * k
                                 df.loc[df.shape[0]] = m
                                 m = {}
                     if m != {}:
-                        m['t100_1'] = float(m['t100_1']) * k
-                        m['t100_2'] = float(m['t100_1']) * k
+                        for i in T_list:
+                            m[i] = float(m[i]) * k
                         df.loc[df.shape[0]] = m
                         m = {}
             if m != {}:
-                m['t100_1'] = float(m['t100_1']) * k
-                m['t100_2'] = float(m['t100_1']) * k
+                for i in T_list:
+                    m[i] = float(m[i]) * k
                 df.loc[df.shape[0]] = m
     quarter, year = pd.to_datetime(date, dayfirst=True).quarter, pd.to_datetime(date).year
     if error == "OK":
@@ -365,31 +391,47 @@ def df_todb_ir4(data):
         if c is True:
             db.type.insert(**m)
 
-def df_todb_fr1(data):
-    if len(data) == 4:
-        [df, quarter, year, company_id] = data
+def df_todb_nbu(data):
+    if len(data) == 5:
+        [df, quarter, year, company_id, table] = data
     else:
         [df, company_id] = data
+    row = db(db.nbu_tables).select()[table-1]
+    name = row.name
+    T_list = []
+    s = row.metric
+    while s.count(';') > 0:
+        T_list.append(s[:s.index(';')])
+        s = s[s.index(';')+2:]
+    T_list.append(s)
+    param = []
+    s = row.param
+    while s.count(';') > 0:
+        param.append(s[:s.index(';')])
+        s = s[s.index(';')+2:]
+    param.append(s)
     for i1 in range(df.shape[0]):
         m = {}
-        if len(data) == 4:
+        if len(data) == 5:
             m['quarter'] = quarter
             m['year'] = year
         m['company_id'] = company_id
         for i2 in df.columns:
             m[i2] = str(df.iloc[i1][i2])
-        m['t100_1'] = float(m['t100_1'])
-        m['t100_2'] = float(m['t100_2'])
+        for i in T_list:
+            m[i] = int(float(m[i]))
         c = True
-        querry = (db.fr1.id > 0) & (db.fr1.h001 == m['h001']) & (db.fr1.ekp == m['ekp']) & (
-                    db.fr1.company_id == str(m['company_id'])) & (db.fr1.f061 == m['f061']) \
+        querry = (db.fr1.id > 0) & (db.fr1.ekp == m['ekp']) & (db.fr1.company_id == str(m['company_id'])) \
                  & (db.fr1.year == str(m['year'])) & (db.fr1.quarter == str(m['quarter']))
         for i in db(querry).select():
-            i.update_record(**m)
-            c = False
-            break
+            for j in param:
+                if db[name][j] == m[j]:
+                    c = False
+            if c is False:
+                i.update_record(**m)
+                break
         if c is True:
-            db.fr1.insert(**m)
+            db[name].insert(**m)
 
 def df_todb_payout(df, company_id, key):
     log555 = open('log555.txt', 'w')
@@ -528,11 +570,18 @@ def df_todb(result, user_id):
             df4 = result[0][3][1]
         else:
             df = result[0]
-    if table == 3:
+    if table < 3:
+        df_todb_nfp([df, quarter, year, company_id])
+    elif table == 3:
         df_todb_payout(df, company_id, 0)
     elif table == 4:
         df_todb_rezerv(df, company_id, 0)
     elif table == 5:
+        df_todb_iar(df1, company_id)
+        df_todb_iar(df2, company_id)
+        df_todb_payout(df3, company_id, 1)
+        df_todb_rezerv(df4, company_id, 1)
+    elif table == 6:
         df_todb_ir4([df, quarter, year, company_id])
         error = True
         if quarter == 1:
@@ -569,15 +618,8 @@ def df_todb(result, user_id):
                         db.type_orig.insert(**m)
                     except KeyError:
                         db.type_orig.update_record(**m)
-    elif table == 6:
-        df_todb_fr1([df, quarter, year, company_id])
-    elif table == 7:
-        df_todb_iar(df1, company_id)
-        df_todb_iar(df2, company_id)
-        df_todb_payout(df3, company_id, 1)
-        df_todb_rezerv(df4, company_id, 1)
     else:
-        df_todb_nfp([df, quarter, year, company_id])
+        df_todb_nbu([df, quarter, year, company_id, table])
     log222.close()
     return "Операция успешно завершена"
 
@@ -1004,7 +1046,7 @@ def main(key, data, user_id):
             f = import_excel(data, user_id)
         elif key == 5:
             f = ["Неизвестная ошибка", [], []]
-            f = parse_fr1(data, user_id)
+            f = parse_nbu(data, user_id)
         else:
             f = [["Неизвестная ошибка", []]]
             f = iar_todf(data, user_id)
@@ -1049,5 +1091,5 @@ def main(key, data, user_id):
     elif key == 3:
         f = [user_errors[user_id]]
     elif key == 5:
-        f = [[user_errors[user_id], []]]
+        f = [user_errors[user_id], [], [], [], []]
     return f, user_errors[user_id]

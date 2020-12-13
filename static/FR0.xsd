@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:annotation>
+        <xs:documentation>FR0 Дані фінансової звітності</xs:documentation>
+        <xs:appinfo>Published: 10.06.2020 19:51:51</xs:appinfo>
+        <xs:appinfo>Start date: 01.01.2020</xs:appinfo>
+    </xs:annotation>
+
+    <xs:simpleType name="CTREPORTDATE">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="(0[1-9]|[12]\d|3[01])\.(0[1-9]|1[0-2])\.\d\d\d\d"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CTKOD_EKP">
+        <xs:annotation>
+            <xs:documentation>Код показника</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+        <xs:enumeration value="FR001000">
+        </xs:enumeration>
+        <xs:enumeration value="FR001001">
+        </xs:enumeration>
+        <xs:enumeration value="FR001002">
+        </xs:enumeration>
+        <xs:enumeration value="FR001005">
+        </xs:enumeration>
+        <xs:enumeration value="FR001010">
+        </xs:enumeration>
+        <xs:enumeration value="FR001011">
+        </xs:enumeration>
+        <xs:enumeration value="FR001012">
+        </xs:enumeration>
+        <xs:enumeration value="FR001015">
+        </xs:enumeration>
+        <xs:enumeration value="FR001016">
+        </xs:enumeration>
+        <xs:enumeration value="FR001017">
+        </xs:enumeration>
+        <xs:enumeration value="FR001020">
+        </xs:enumeration>
+        <xs:enumeration value="FR001021">
+        </xs:enumeration>
+        <xs:enumeration value="FR001022">
+        </xs:enumeration>
+        <xs:enumeration value="FR001030">
+        </xs:enumeration>
+        <xs:enumeration value="FR001035">
+        </xs:enumeration>
+        <xs:enumeration value="FR001040">
+        </xs:enumeration>
+        <xs:enumeration value="FR001045">
+        </xs:enumeration>
+        <xs:enumeration value="FR001050">
+        </xs:enumeration>
+        <xs:enumeration value="FR001060">
+        </xs:enumeration>
+        <xs:enumeration value="FR001065">
+        </xs:enumeration>
+        <xs:enumeration value="FR001090">
+        </xs:enumeration>
+        <xs:enumeration value="FR001095">
+        </xs:enumeration>
+        <xs:enumeration value="FR001100">
+        </xs:enumeration>
+        <xs:enumeration value="FR001101">
+        </xs:enumeration>
+        <xs:enumeration value="FR001102">
+        </xs:enumeration>
+        <xs:enumeration value="FR001103">
+        </xs:enumeration>
+        <xs:enumeration value="FR001104">
+        </xs:enumeration>
+        <xs:enumeration value="FR001110">
+        </xs:enumeration>
+        <xs:enumeration value="FR001115">
+        </xs:enumeration>
+        <xs:enumeration value="FR001120">
+        </xs:enumeration>
+        <xs:enumeration value="FR001125">
+        </xs:enumeration>
+        <xs:enumeration value="FR001130">
+        </xs:enumeration>
+        <xs:enumeration value="FR001135">
+        </xs:enumeration>
+        <xs:enumeration value="FR001136">
+        </xs:enumeration>
+        <xs:enumeration value="FR001140">
+        </xs:enumeration>
+        <xs:enumeration value="FR001145">
+        </xs:enumeration>
+        <xs:enumeration value="FR001155">
+        </xs:enumeration>
+        <xs:enumeration value="FR001160">
+        </xs:enumeration>
+        <xs:enumeration value="FR001165">
+        </xs:enumeration>
+        <xs:enumeration value="FR001166">
+        </xs:enumeration>
+        <xs:enumeration value="FR001167">
+        </xs:enumeration>
+        <xs:enumeration value="FR001170">
+        </xs:enumeration>
+        <xs:enumeration value="FR001180">
+        </xs:enumeration>
+        <xs:enumeration value="FR001181">
+        </xs:enumeration>
+        <xs:enumeration value="FR001182">
+        </xs:enumeration>
+        <xs:enumeration value="FR001183">
+        </xs:enumeration>
+        <xs:enumeration value="FR001184">
+        </xs:enumeration>
+        <xs:enumeration value="FR001190">
+        </xs:enumeration>
+        <xs:enumeration value="FR001195">
+        </xs:enumeration>
+        <xs:enumeration value="FR001200">
+        </xs:enumeration>
+        <xs:enumeration value="FR001300">
+        </xs:enumeration>
+        <xs:enumeration value="FR001400">
+        </xs:enumeration>
+        <xs:enumeration value="FR001401">
+        </xs:enumeration>
+        <xs:enumeration value="FR001405">
+        </xs:enumeration>
+        <xs:enumeration value="FR001410">
+        </xs:enumeration>
+        <xs:enumeration value="FR001411">
+        </xs:enumeration>
+        <xs:enumeration value="FR001412">
+        </xs:enumeration>
+        <xs:enumeration value="FR001415">
+        </xs:enumeration>
+        <xs:enumeration value="FR001420">
+        </xs:enumeration>
+        <xs:enumeration value="FR001425">
+        </xs:enumeration>
+        <xs:enumeration value="FR001430">
+        </xs:enumeration>
+        <xs:enumeration value="FR001435">
+        </xs:enumeration>
+        <xs:enumeration value="FR001495">
+        </xs:enumeration>
+        <xs:enumeration value="FR001500">
+        </xs:enumeration>
+        <xs:enumeration value="FR001505">
+        </xs:enumeration>
+        <xs:enumeration value="FR001510">
+        </xs:enumeration>
+        <xs:enumeration value="FR001515">
+        </xs:enumeration>
+        <xs:enumeration value="FR001520">
+        </xs:enumeration>
+        <xs:enumeration value="FR001521">
+        </xs:enumeration>
+        <xs:enumeration value="FR001525">
+        </xs:enumeration>
+        <xs:enumeration value="FR001526">
+        </xs:enumeration>
+        <xs:enumeration value="FR001530">
+        </xs:enumeration>
+        <xs:enumeration value="FR001531">
+        </xs:enumeration>
+        <xs:enumeration value="FR001532">
+        </xs:enumeration>
+        <xs:enumeration value="FR001533">
+        </xs:enumeration>
+        <xs:enumeration value="FR001534">
+        </xs:enumeration>
+        <xs:enumeration value="FR001535">
+        </xs:enumeration>
+        <xs:enumeration value="FR001540">
+        </xs:enumeration>
+        <xs:enumeration value="FR001545">
+        </xs:enumeration>
+        <xs:enumeration value="FR001595">
+        </xs:enumeration>
+        <xs:enumeration value="FR001600">
+        </xs:enumeration>
+        <xs:enumeration value="FR001605">
+        </xs:enumeration>
+        <xs:enumeration value="FR001610">
+        </xs:enumeration>
+        <xs:enumeration value="FR001615">
+        </xs:enumeration>
+        <xs:enumeration value="FR001620">
+        </xs:enumeration>
+        <xs:enumeration value="FR001621">
+        </xs:enumeration>
+        <xs:enumeration value="FR001625">
+        </xs:enumeration>
+        <xs:enumeration value="FR001630">
+        </xs:enumeration>
+        <xs:enumeration value="FR001635">
+        </xs:enumeration>
+        <xs:enumeration value="FR001640">
+        </xs:enumeration>
+        <xs:enumeration value="FR001645">
+        </xs:enumeration>
+        <xs:enumeration value="FR001650">
+        </xs:enumeration>
+        <xs:enumeration value="FR001660">
+        </xs:enumeration>
+        <xs:enumeration value="FR001665">
+        </xs:enumeration>
+        <xs:enumeration value="FR001670">
+        </xs:enumeration>
+        <xs:enumeration value="FR001690">
+        </xs:enumeration>
+        <xs:enumeration value="FR001695">
+        </xs:enumeration>
+        <xs:enumeration value="FR001700">
+        </xs:enumeration>
+        <xs:enumeration value="FR001800">
+        </xs:enumeration>
+        <xs:enumeration value="FR001900">
+        </xs:enumeration>
+        <xs:enumeration value="FR002000">
+        </xs:enumeration>
+        <xs:enumeration value="FR002010">
+        </xs:enumeration>
+        <xs:enumeration value="FR002011">
+        </xs:enumeration>
+        <xs:enumeration value="FR002012">
+        </xs:enumeration>
+        <xs:enumeration value="FR002013">
+        </xs:enumeration>
+        <xs:enumeration value="FR002014">
+        </xs:enumeration>
+        <xs:enumeration value="FR002050">
+        </xs:enumeration>
+        <xs:enumeration value="FR002070">
+        </xs:enumeration>
+        <xs:enumeration value="FR002090">
+        </xs:enumeration>
+        <xs:enumeration value="FR002095">
+        </xs:enumeration>
+        <xs:enumeration value="FR002105">
+        </xs:enumeration>
+        <xs:enumeration value="FR002110">
+        </xs:enumeration>
+        <xs:enumeration value="FR002111">
+        </xs:enumeration>
+        <xs:enumeration value="FR002112">
+        </xs:enumeration>
+        <xs:enumeration value="FR002120">
+        </xs:enumeration>
+        <xs:enumeration value="FR002121">
+        </xs:enumeration>
+        <xs:enumeration value="FR002122">
+        </xs:enumeration>
+        <xs:enumeration value="FR002123">
+        </xs:enumeration>
+        <xs:enumeration value="FR002130">
+        </xs:enumeration>
+        <xs:enumeration value="FR002150">
+        </xs:enumeration>
+        <xs:enumeration value="FR002180">
+        </xs:enumeration>
+        <xs:enumeration value="FR002181">
+        </xs:enumeration>
+        <xs:enumeration value="FR002182">
+        </xs:enumeration>
+        <xs:enumeration value="FR002190">
+        </xs:enumeration>
+        <xs:enumeration value="FR002195">
+        </xs:enumeration>
+        <xs:enumeration value="FR002200">
+        </xs:enumeration>
+        <xs:enumeration value="FR002220">
+        </xs:enumeration>
+        <xs:enumeration value="FR002240">
+        </xs:enumeration>
+        <xs:enumeration value="FR002241">
+        </xs:enumeration>
+        <xs:enumeration value="FR002250">
+        </xs:enumeration>
+        <xs:enumeration value="FR002255">
+        </xs:enumeration>
+        <xs:enumeration value="FR002270">
+        </xs:enumeration>
+        <xs:enumeration value="FR002275">
+        </xs:enumeration>
+        <xs:enumeration value="FR002280">
+        </xs:enumeration>
+        <xs:enumeration value="FR002285">
+        </xs:enumeration>
+        <xs:enumeration value="FR002290">
+        </xs:enumeration>
+        <xs:enumeration value="FR002295">
+        </xs:enumeration>
+        <xs:enumeration value="FR002300">
+        </xs:enumeration>
+        <xs:enumeration value="FR002305">
+        </xs:enumeration>
+        <xs:enumeration value="FR002310">
+        </xs:enumeration>
+        <xs:enumeration value="FR002350">
+        </xs:enumeration>
+        <xs:enumeration value="FR002355">
+        </xs:enumeration>
+        <xs:enumeration value="FR002400">
+        </xs:enumeration>
+        <xs:enumeration value="FR002405">
+        </xs:enumeration>
+        <xs:enumeration value="FR002410">
+        </xs:enumeration>
+        <xs:enumeration value="FR002415">
+        </xs:enumeration>
+        <xs:enumeration value="FR002445">
+        </xs:enumeration>
+        <xs:enumeration value="FR002450">
+        </xs:enumeration>
+        <xs:enumeration value="FR002455">
+        </xs:enumeration>
+        <xs:enumeration value="FR002460">
+        </xs:enumeration>
+        <xs:enumeration value="FR002465">
+        </xs:enumeration>
+        <xs:enumeration value="FR002500">
+        </xs:enumeration>
+        <xs:enumeration value="FR002505">
+        </xs:enumeration>
+        <xs:enumeration value="FR002510">
+        </xs:enumeration>
+        <xs:enumeration value="FR002515">
+        </xs:enumeration>
+        <xs:enumeration value="FR002520">
+        </xs:enumeration>
+        <xs:enumeration value="FR002550">
+        </xs:enumeration>
+        <xs:enumeration value="FR002600">
+        </xs:enumeration>
+        <xs:enumeration value="FR002605">
+        </xs:enumeration>
+        <xs:enumeration value="FR002610">
+        </xs:enumeration>
+        <xs:enumeration value="FR002615">
+        </xs:enumeration>
+        <xs:enumeration value="FR002650">
+        </xs:enumeration>
+        <xs:enumeration value="FR003000">
+        </xs:enumeration>
+        <xs:enumeration value="FR003005">
+        </xs:enumeration>
+        <xs:enumeration value="FR003006">
+        </xs:enumeration>
+        <xs:enumeration value="FR003010">
+        </xs:enumeration>
+        <xs:enumeration value="FR003011">
+        </xs:enumeration>
+        <xs:enumeration value="FR003015">
+        </xs:enumeration>
+        <xs:enumeration value="FR003020">
+        </xs:enumeration>
+        <xs:enumeration value="FR003025">
+        </xs:enumeration>
+        <xs:enumeration value="FR003035">
+        </xs:enumeration>
+        <xs:enumeration value="FR003040">
+        </xs:enumeration>
+        <xs:enumeration value="FR003045">
+        </xs:enumeration>
+        <xs:enumeration value="FR003050">
+        </xs:enumeration>
+        <xs:enumeration value="FR003055">
+        </xs:enumeration>
+        <xs:enumeration value="FR003095">
+        </xs:enumeration>
+        <xs:enumeration value="FR003100">
+        </xs:enumeration>
+        <xs:enumeration value="FR003105">
+        </xs:enumeration>
+        <xs:enumeration value="FR003110">
+        </xs:enumeration>
+        <xs:enumeration value="FR003115">
+        </xs:enumeration>
+        <xs:enumeration value="FR003116">
+        </xs:enumeration>
+        <xs:enumeration value="FR003117">
+        </xs:enumeration>
+        <xs:enumeration value="FR003118">
+        </xs:enumeration>
+        <xs:enumeration value="FR003135">
+        </xs:enumeration>
+        <xs:enumeration value="FR003140">
+        </xs:enumeration>
+        <xs:enumeration value="FR003145">
+        </xs:enumeration>
+        <xs:enumeration value="FR003150">
+        </xs:enumeration>
+        <xs:enumeration value="FR003155">
+        </xs:enumeration>
+        <xs:enumeration value="FR003190">
+        </xs:enumeration>
+        <xs:enumeration value="FR003500">
+        </xs:enumeration>
+        <xs:enumeration value="FR003505">
+        </xs:enumeration>
+        <xs:enumeration value="FR003510">
+        </xs:enumeration>
+        <xs:enumeration value="FR003515">
+        </xs:enumeration>
+        <xs:enumeration value="FR003520">
+        </xs:enumeration>
+        <xs:enumeration value="FR003521">
+        </xs:enumeration>
+        <xs:enumeration value="FR003522">
+        </xs:enumeration>
+        <xs:enumeration value="FR003523">
+        </xs:enumeration>
+        <xs:enumeration value="FR003524">
+        </xs:enumeration>
+        <xs:enumeration value="FR003526">
+        </xs:enumeration>
+        <xs:enumeration value="FR003540">
+        </xs:enumeration>
+        <xs:enumeration value="FR003550">
+        </xs:enumeration>
+        <xs:enumeration value="FR003551">
+        </xs:enumeration>
+        <xs:enumeration value="FR003552">
+        </xs:enumeration>
+        <xs:enumeration value="FR003553">
+        </xs:enumeration>
+        <xs:enumeration value="FR003554">
+        </xs:enumeration>
+        <xs:enumeration value="FR003556">
+        </xs:enumeration>
+        <xs:enumeration value="FR003557">
+        </xs:enumeration>
+        <xs:enumeration value="FR003560">
+        </xs:enumeration>
+        <xs:enumeration value="FR003561">
+        </xs:enumeration>
+        <xs:enumeration value="FR003562">
+        </xs:enumeration>
+        <xs:enumeration value="FR003563">
+        </xs:enumeration>
+        <xs:enumeration value="FR003564">
+        </xs:enumeration>
+        <xs:enumeration value="FR003566">
+        </xs:enumeration>
+        <xs:enumeration value="FR003567">
+        </xs:enumeration>
+        <xs:enumeration value="FR003570">
+        </xs:enumeration>
+        <xs:enumeration value="FR003580">
+        </xs:enumeration>
+        <xs:enumeration value="FR003585">
+        </xs:enumeration>
+        <xs:enumeration value="FR004000">
+        </xs:enumeration>
+        <xs:enumeration value="FR004005">
+        </xs:enumeration>
+        <xs:enumeration value="FR004010">
+        </xs:enumeration>
+        <xs:enumeration value="FR004090">
+        </xs:enumeration>
+        <xs:enumeration value="FR004095">
+        </xs:enumeration>
+        <xs:enumeration value="FR004100">
+        </xs:enumeration>
+        <xs:enumeration value="FR004110">
+        </xs:enumeration>
+        <xs:enumeration value="FR004111">
+        </xs:enumeration>
+        <xs:enumeration value="FR004112">
+        </xs:enumeration>
+        <xs:enumeration value="FR004113">
+        </xs:enumeration>
+        <xs:enumeration value="FR004114">
+        </xs:enumeration>
+        <xs:enumeration value="FR004116">
+        </xs:enumeration>
+        <xs:enumeration value="FR004200">
+        </xs:enumeration>
+        <xs:enumeration value="FR004205">
+        </xs:enumeration>
+        <xs:enumeration value="FR004210">
+        </xs:enumeration>
+        <xs:enumeration value="FR004215">
+        </xs:enumeration>
+        <xs:enumeration value="FR004220">
+        </xs:enumeration>
+        <xs:enumeration value="FR004225">
+        </xs:enumeration>
+        <xs:enumeration value="FR004240">
+        </xs:enumeration>
+        <xs:enumeration value="FR004245">
+        </xs:enumeration>
+        <xs:enumeration value="FR004260">
+        </xs:enumeration>
+        <xs:enumeration value="FR004265">
+        </xs:enumeration>
+        <xs:enumeration value="FR004270">
+        </xs:enumeration>
+        <xs:enumeration value="FR004275">
+        </xs:enumeration>
+        <xs:enumeration value="FR004280">
+        </xs:enumeration>
+        <xs:enumeration value="FR004290">
+        </xs:enumeration>
+        <xs:enumeration value="FR004291">
+        </xs:enumeration>
+        <xs:enumeration value="FR004295">
+        </xs:enumeration>
+        <xs:enumeration value="FR004300">
+        </xs:enumeration>
+        <xs:enumeration value="FR013195">
+        </xs:enumeration>
+        <xs:enumeration value="FR013200">
+        </xs:enumeration>
+        <xs:enumeration value="FR013205">
+        </xs:enumeration>
+        <xs:enumeration value="FR013215">
+        </xs:enumeration>
+        <xs:enumeration value="FR013220">
+        </xs:enumeration>
+        <xs:enumeration value="FR013225">
+        </xs:enumeration>
+        <xs:enumeration value="FR013230">
+        </xs:enumeration>
+        <xs:enumeration value="FR013235">
+        </xs:enumeration>
+        <xs:enumeration value="FR013250">
+        </xs:enumeration>
+        <xs:enumeration value="FR013255">
+        </xs:enumeration>
+        <xs:enumeration value="FR013260">
+        </xs:enumeration>
+        <xs:enumeration value="FR013270">
+        </xs:enumeration>
+        <xs:enumeration value="FR013275">
+        </xs:enumeration>
+        <xs:enumeration value="FR013280">
+        </xs:enumeration>
+        <xs:enumeration value="FR013290">
+        </xs:enumeration>
+        <xs:enumeration value="FR013295">
+        </xs:enumeration>
+        <xs:enumeration value="FR013300">
+        </xs:enumeration>
+        <xs:enumeration value="FR013305">
+        </xs:enumeration>
+        <xs:enumeration value="FR013310">
+        </xs:enumeration>
+        <xs:enumeration value="FR013340">
+        </xs:enumeration>
+        <xs:enumeration value="FR013345">
+        </xs:enumeration>
+        <xs:enumeration value="FR013350">
+        </xs:enumeration>
+        <xs:enumeration value="FR013355">
+        </xs:enumeration>
+        <xs:enumeration value="FR013360">
+        </xs:enumeration>
+        <xs:enumeration value="FR013365">
+        </xs:enumeration>
+        <xs:enumeration value="FR013370">
+        </xs:enumeration>
+        <xs:enumeration value="FR013375">
+        </xs:enumeration>
+        <xs:enumeration value="FR013390">
+        </xs:enumeration>
+        <xs:enumeration value="FR013395">
+        </xs:enumeration>
+        <xs:enumeration value="FR013400">
+        </xs:enumeration>
+        <xs:enumeration value="FR013405">
+        </xs:enumeration>
+        <xs:enumeration value="FR013410">
+        </xs:enumeration>
+        <xs:enumeration value="FR013415">
+        </xs:enumeration>
+        <xs:enumeration value="FR023195">
+        </xs:enumeration>
+        <xs:enumeration value="FR023200">
+        </xs:enumeration>
+        <xs:enumeration value="FR023205">
+        </xs:enumeration>
+        <xs:enumeration value="FR023215">
+        </xs:enumeration>
+        <xs:enumeration value="FR023220">
+        </xs:enumeration>
+        <xs:enumeration value="FR023225">
+        </xs:enumeration>
+        <xs:enumeration value="FR023230">
+        </xs:enumeration>
+        <xs:enumeration value="FR023235">
+        </xs:enumeration>
+        <xs:enumeration value="FR023250">
+        </xs:enumeration>
+        <xs:enumeration value="FR023255">
+        </xs:enumeration>
+        <xs:enumeration value="FR023260">
+        </xs:enumeration>
+        <xs:enumeration value="FR023270">
+        </xs:enumeration>
+        <xs:enumeration value="FR023275">
+        </xs:enumeration>
+        <xs:enumeration value="FR023280">
+        </xs:enumeration>
+        <xs:enumeration value="FR023290">
+        </xs:enumeration>
+        <xs:enumeration value="FR023295">
+        </xs:enumeration>
+        <xs:enumeration value="FR023300">
+        </xs:enumeration>
+        <xs:enumeration value="FR023305">
+        </xs:enumeration>
+        <xs:enumeration value="FR023310">
+        </xs:enumeration>
+        <xs:enumeration value="FR023340">
+        </xs:enumeration>
+        <xs:enumeration value="FR023345">
+        </xs:enumeration>
+        <xs:enumeration value="FR023350">
+        </xs:enumeration>
+        <xs:enumeration value="FR023355">
+        </xs:enumeration>
+        <xs:enumeration value="FR023360">
+        </xs:enumeration>
+        <xs:enumeration value="FR023365">
+        </xs:enumeration>
+        <xs:enumeration value="FR023370">
+        </xs:enumeration>
+        <xs:enumeration value="FR023375">
+        </xs:enumeration>
+        <xs:enumeration value="FR023390">
+        </xs:enumeration>
+        <xs:enumeration value="FR023395">
+        </xs:enumeration>
+        <xs:enumeration value="FR023400">
+        </xs:enumeration>
+        <xs:enumeration value="FR023405">
+        </xs:enumeration>
+        <xs:enumeration value="FR023410">
+        </xs:enumeration>
+        <xs:enumeration value="FR023415">
+        </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CTKOD_F061">
+        <xs:annotation>
+            <xs:documentation>Код ознаки операції</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+        <xs:enumeration value="#">
+        </xs:enumeration>
+        <xs:enumeration value="1">
+        </xs:enumeration>
+        <xs:enumeration value="2">
+        </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CTKOD_F110">
+        <xs:annotation>
+            <xs:documentation>Код форми звітності</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+        <xs:enumeration value="1">
+        </xs:enumeration>
+        <xs:enumeration value="3">
+        </xs:enumeration>
+        <xs:enumeration value="4">
+        </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CTKOD_H001">
+        <xs:annotation>
+            <xs:documentation>Код виду капіталу</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+        <xs:enumeration value="#">
+        </xs:enumeration>
+        <xs:enumeration value="1">
+        </xs:enumeration>
+        <xs:enumeration value="2">
+        </xs:enumeration>
+        <xs:enumeration value="3">
+        </xs:enumeration>
+        <xs:enumeration value="4">
+        </xs:enumeration>
+        <xs:enumeration value="5">
+        </xs:enumeration>
+        <xs:enumeration value="6">
+        </xs:enumeration>
+        <xs:enumeration value="7">
+        </xs:enumeration>
+        <xs:enumeration value="8">
+        </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="NBUSTATREPORT">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="HEAD">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="STATFORM">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="FFR0"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="EDRPOU" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation>EDRPOU</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="REPORTDATE" type="CTREPORTDATE">
+                                <xs:annotation>
+                                    <xs:documentation>Звітна дата</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DATA" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:all>
+                            <xs:element name="EKP" type="CTKOD_EKP">
+                                <xs:annotation>
+                                    <xs:documentation>Код показника</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="F061" type="CTKOD_F061">
+                                <xs:annotation>
+                                    <xs:documentation>Код ознаки операції</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="F110" type="CTKOD_F110">
+                                <xs:annotation>
+                                    <xs:documentation>Код форми звітності</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="H001" type="CTKOD_H001">
+                                <xs:annotation>
+                                    <xs:documentation>Код виду капіталу</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="T100_1" type="xs:long">
+                                <xs:annotation>
+                                    <xs:documentation>Сума/кількість за звітний період/на початок звітного періоду</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="T100_2" type="xs:long">
+                                <xs:annotation>
+                                    <xs:documentation>Сума/кількість за аналогічний період попереднього року/на кінець звітного періоду</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="EKPAndF061AndF110AndH001MustBeUnique">
+                <xs:selector xpath="DATA"/>
+                <xs:field xpath="EKP"/>
+                <xs:field xpath="F061"/>
+                <xs:field xpath="F110"/>
+                <xs:field xpath="H001"/>
+        </xs:unique>
+    </xs:element>
+</xs:schema>

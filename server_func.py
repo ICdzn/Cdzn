@@ -3,6 +3,8 @@ import datetime
 import xlrd, xlwt
 import pandas as pd
 import random
+import lxml
+from lxml import etree, html
 
 '''
 company_id - int() - номер компании в таблице db.company
@@ -16,6 +18,9 @@ basa - int() - значение, определяющие базу/таблиц�
 Для 3 и 4 разделов d1 и d2 определяют кварталы, по которым будет создаваться DataFrame
 Для журнала и резерва d1 и d2 сравниваются с датами страховых актов из таблиц db.payout и db.rezerv
 '''
+ir2_desc = pd.DataFrame(columns = db.ir2_description.fields[1:])
+for i in db(db.ir2_description).select():
+    ir2_desc.loc[ir2_desc.shape[0]] = [i.p_id, i.ekp]
 ir4_desc = pd.DataFrame(columns = db.ir4_description.fields[2:])
 for i in db(db.ir4_description).select():
     ir4_desc.loc[ir4_desc.shape[0]] = [i.p_id, i.ekp, i.h015, i.k030, i.z220]
@@ -292,6 +297,7 @@ def db_toexcel(df, quarter, year, basa):
     if basa == 3:
         log15.close()
     return ex
+
 def df_tonfp_iar(df, quarter, year):
     if quarter == 4:
         period = str(year)
@@ -315,3 +321,109 @@ def df_tonfp_iar(df, quarter, year):
         pd.DataFrame([]).to_excel(writer, sheet_name='виплати', index = False, header = False)
         pd.DataFrame([]).to_excel(writer, sheet_name='РЗ', index = False, header = False)
     return filename1, filename2, filename3
+
+def ir2_convert(files):
+    logsss = open('logsss.txt', 'w')
+    '''xmlschema_doc = etree.parse("apps/neww/static/IR2.xsd")
+    xmlschema = etree.XMLSchema(xmlschema_doc)'''
+    error = "OK"
+    year_d = 0
+    d = {1: [], 2: [], 3: [], 4: []}
+    for xml in files:
+        xml_doc = etree.parse(xml)
+        try:
+            '''xmlschema.assertValid(xml_doc)'''
+            with open(xml, 'r') as file:
+                root = etree.fromstringlist(file, parser=html.HTMLParser(encoding='utf-8'))
+        except UnicodeDecodeError:
+            error = "Неподходящий формат. Загрузите файл с росширением .xml"
+        except etree.XMLSyntaxError:
+            error = "Неподходящий формат. Загрузите файл с росширением .xml"
+        except etree.DocumentInvalid:
+            error = "Файл не прошел проверку. Свертесь с правилами состовления файла"
+        else:
+            cols = ['ekp', 't070']
+            df = pd.DataFrame(columns=cols)
+            for h1 in root.getchildren():
+                if h1.tag == "reportdate":
+                    date = h1.text
+                m = {}
+                for h2 in h1.getchildren():
+                    if h2.tag == "reportdate":
+                        date = h2.text
+                    if h2.tag in cols:
+                        m[h2.tag] = h2.text
+                    else:
+                        m = {}
+                        for h3 in h2.getchildren():
+                            if h3.tag == "reportdate":
+                                date = h3.text
+                            if h3.tag in cols:
+                                m[h3.tag] = h3.text
+                            else:
+                                m = {}
+                                for h4 in h3.getchildren():
+                                    if h4.tag == "reportdate":
+                                        date = h4.text
+                                    if h4.tag in cols:
+                                        m[h4.tag] = h4.text
+                                    else:
+                                        m = {}
+                                        for h5 in h4.getchildren():
+                                            if h5.tag in cols:
+                                                m[h5.tag] = h5.text
+                                        if m != {}:
+                                            m['t070'] = int(m['t070'])
+                                            df.loc[df.shape[0]] = m
+                                            m = {}
+                                if m != {}:
+                                    m['t070'] = int(m['t070'])
+                                    df.loc[df.shape[0]] = m
+                                    m = {}
+                        if m != {}:
+                            m['t070'] = int(m['t070'])
+                            df.loc[df.shape[0]] = m
+                            m = {}
+                if m != {}:
+                    m['t070'] = int(m['t070'])
+                    df.loc[df.shape[0]] = m
+            quarter, year = pd.to_datetime(date, dayfirst=True).quarter, pd.to_datetime(date).year
+            logsss.write(str(quarter)+'\n\n')
+            if year_d > 0 and year != year_d:
+                error = "Серед обраних файлів є файли за {0} та за {1} роки\n Виберіть файли за якийсь один рік".format(year, year_d)
+                break
+            else:
+                d[quarter] = df
+                year_d = year
+    ir2 = pd.ExcelFile("apps/neww/static/Раздел 1.xlsx").parse(0)
+    ir2.columns = ['тех стр', 'name', 'ист-к инф.', 'p_id', 'year', 'strahovshik'
+    , 'total_pass', 'total', 'quarter 1', 'quarter 2', 'quarter 3', 'quarter 4', 'kod poln']
+    a = {}
+    for i in range(ir2.shape[0]):
+        try:
+            c = int(ir2.iloc[i]['p_id'])
+        except ValueError:
+            c = -10-i
+        a.update({ir2.iloc[i].name: c})
+    ir2 = ir2.rename(index = a)
+    ir2['total'] = 0
+    ir2.iloc[0] = 'исх. данные (отчет. год)'
+    for j in range(4):
+        df = d[j+1]
+        try:
+            if df == []:
+                pass
+        except ValueError:
+            for i in range(df.shape[0]):
+                p_id = ir2_desc[ir2_desc['ekp'] == df.iloc[i]['ekp']]['p_id']
+                p_id = int(p_id.iloc[0])
+                t070 = int(df.iloc[i]['t070'])
+                ir2.loc[p_id]['total'] += t070
+                ir2.loc[p_id]['quarter {}'.format(j+1)] = t070
+    ir2['year'] = year_d
+    logsss.write(str(ir2['year'])+str(ir2['total']))
+    filename = "csv/{0}-{1}-Розділ_1.xlsx".format(random.randint(1000, 9999), year_d)
+    with pd.ExcelWriter("apps/neww/static/"+filename) as writer:
+        ir2.to_excel(writer, index = False, header = False)
+    logsss.close()
+    return filename

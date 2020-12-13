@@ -17,9 +17,11 @@
 			<option value=2>Нацкомфінпослуг Розділ 4</option>
 			<option value=3>Нацкомфінпослуг Журнал виплат</option>
 			<option value=4>Нацкомфінпослуг РЕЗ</option>
-			<option value=5>IR4</option>
-			<option value=6>FR1</option>
-			<option value=7>ІАР</option>
+			<option value=5>ІАР</option>
+			<option value=6>IR4</option>
+			[[for i in range(len(tables)):]]
+				<option value=[[=i+7]]>[[=(tables[i])]]</option>
+			[[pass]]
 		</select>
     </div>
     <input type="submit" value="Далі">

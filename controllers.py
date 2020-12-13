@@ -31,12 +31,18 @@ from .common import db, session, T, cache, auth, logger, authenticated, unauthen
 from py4web.utils.form import Form, FormStyleBulma
 from pydal.validators import IS_IN_SET
 from . import excel_todb, server_func
-import datetime, random
+import datetime, random, xlrd
 import pandas as pd
 from lxml import etree, html
 users_block = {}
 for i in db(db.company_user).select():
     users_block[i.site_user] = 0
+if len(db(db.ir2_description).select()) < 1:
+    for i in range(91):
+        if i < 9:
+            db.ir2_description.insert(p_id=i+1, ekp="IR2000"+str(i+1))
+        else:
+            db.ir2_description.insert(p_id=i+1, ekp="IR200"+str(i+1))
 
 def func():
     df2 = pd.read_excel('ir4_description.xls').drop(columns=['Unnamed: 0'])
@@ -47,7 +53,6 @@ def func():
             if str(m[j]) == 'nan':
                 m[j] = None
         db.ir4_description.insert(**m)
-
 
 @authenticated()
 @action.uses(auth)
@@ -282,13 +287,13 @@ def multi_up_post():
     log444.close()
     return dict(message=text, user=user, url='', error=error, df=df)
 
-@action("convert",method="GET")
-@action.uses("convert.html", auth)
+@action("convert_ir4",method="GET")
+@action.uses("convert_ir4.html", auth)
 def convert_get():
     user = auth.get_user()
     return dict(user=user, session=session)
 
-@action("static/convert",method="POST")
+@action("static/convert_ir4",method="POST")
 @action.uses("convert2.html", auth)
 def convert_post():
     user = auth.get_user()
@@ -303,12 +308,32 @@ def convert_post():
         f1, f2, f3 = '', '', ''
     return dict(user=user, f1=f1, f2=f2, f3=f3, message=result[0], error=error)
 
+@action("convert_ir2",method="GET")
+@action.uses("convert_ir2.html", auth)
+def convert_get():
+    user = auth.get_user()
+    return dict(user=user, session=session)
+
+@action("static/convert_ir2",method="POST")
+@action.uses("convert3.html", auth)
+def convert_post():
+    user = auth.get_user()
+    ff = request.files.getall('File')
+    files = []
+    for f in ff:
+        filename = "apps/neww/uploads/{0}-{1}".format(random.randint(0, 10000), f.filename)
+        files.append(filename)
+        f.save(filename)
+    file = server_func.ir2_convert(files)
+    return dict(user=user, f=file)
+
 
 @action("upload",method="GET")
 @action.uses("upload_file.html", auth)
 def upload_get():
     c = []
     b = []
+    t = []
     user = auth.get_user()
     if len(user) > 0:
         for i in db(db.company_user).select():
@@ -316,7 +341,9 @@ def upload_get():
                 j = db(db.company.id == i.company_id).select()[0]
                 c.append(j.IAN_FULL_NAME)
                 b.append(j.id)
-    return dict(message="",new_data_dict={},session=session,companies=c, comp=b, user=user)
+        for i in db(db.nbu_tables).select():
+            t.append(i.name)
+    return dict(message="",new_data_dict={},session=session,companies=c, comp=b, user=user, tables=t)
 
 
 @action("static/upload",method="POST")
@@ -337,7 +364,7 @@ def upload2_post():
     if table < 3:
         quarter=int(request.POST['quarter'])
         year=int(request.POST['year'])
-    if table != 7:
+    if table != 5:
         k=int(request.POST['k'])
     f = request.files["File"]
     filename = "apps/neww/uploads/{0}-{1}".format(random.randint(0, 10000), f.filename)
@@ -350,7 +377,23 @@ def upload2_post():
         a = [result[1], int(quarter), int(year), db(db.company.id == c).select()[0].id, table]
         users_block[user['id']] = a
         log.close()
+    elif table == 3 or table == 4:
+        log = open('history.log', 'a')
+        result, error_kod = excel_todb.main(4, [filename, table, k], user['id'])
+        log.write("User_id: {0};\tuploaded file: {1};\tcompany_id: {2},\n".format(
+            user['id'], filename[18:], c))
+        a = [result[1], db(db.company.id == c).select()[0].id, table]
+        users_block[user['id']] = a
+        log.close()
     elif table == 5:
+        log = open('history.log', 'a')
+        result, error_kod = excel_todb.main(6, filename, user['id'])
+        log.write("User_id: {0};\tuploaded file: {1};\tcompany_id: {2}\n".format(
+            user['id'], filename, c))
+        a = [result, db(db.company.id == c).select()[0].id, table]
+        users_block[user['id']] = a
+        log.close()
+    elif table == 6:
         log = open('history.log', 'a')
         result, error_kod = excel_todb.main(2, [filename, k], user['id'])
         log111.write(str(result))
@@ -359,29 +402,13 @@ def upload2_post():
         a = [result[1], result[3], result[4], db(db.company.id == c).select()[0].id, table]
         users_block[user['id']] = a
         log.close()
-    elif table == 6:
+    else:
         log = open('history.log', 'a')
-        result, error_kod = excel_todb.main(5, [filename, k], user['id'])
+        result, error_kod = excel_todb.main(5, [filename, table-6, k], user['id'])
         log111.write(str(result))
         log.write("User_id: {0};\tuploaded file: {1};\tcompany_id: {2},\tquarter: {3};\tyear: {4};\n".format(
             user['id'], filename, c, result[3], result[4]))
         a = [result[1], result[3], result[4], db(db.company.id == c).select()[0].id, table]
-        users_block[user['id']] = a
-        log.close()
-    elif table == 7:
-        log = open('history.log', 'a')
-        result, error_kod = excel_todb.main(6, filename, user['id'])
-        log.write("User_id: {0};\tuploaded file: {1};\tcompany_id: {2}\n".format(
-            user['id'], filename, c))
-        a = [result, db(db.company.id == c).select()[0].id, table]
-        users_block[user['id']] = a
-        log.close()
-    else:
-        log = open('history.log', 'a')
-        result, error_kod = excel_todb.main(4, [filename, table, k], user['id'])
-        log.write("User_id: {0};\tuploaded file: {1};\tcompany_id: {2},\n".format(
-            user['id'], filename[18:], c))
-        a = [result[1], db(db.company.id == c).select()[0].id, table]
         users_block[user['id']] = a
         log.close()
     log111.write(str(result))
@@ -430,6 +457,180 @@ def add_company_post():
     db.company_user.insert(site_user=1, company_id=db(db.company).select()[-1].id)
     message = "Інформація про компанію успішно додана"
     return dict(message=message, user=user, url='')
+
+@action("add_table",method="GET")
+@action.uses("add_table.html", auth)
+def add_table_get():
+    user = auth.get_user()
+    return dict(user=user, session=session)
+
+@action("static/add_table",method="POST")
+@action.uses("result_page.html", auth)
+def add_table_post():
+    log333 = open('log333.txt', 'w')
+    user = auth.get_user()
+    name=request.POST['name']
+    schema=request.POST['schema']
+    p_schema = "apps/neww/static/{}.xsd".format(name)
+    try:
+        schema.save(p_schema)
+    except OSError:
+        pass
+    ff = request.files["File"]
+    keyss = request.files.getall('Keys')
+    reg = "apps/neww/static/csv/{}".format(ff.filename)
+    try:
+        ff.save(reg)
+    except OSError:
+        pass
+    keys = []
+    for i in range(len(keyss)):
+        keys.append("apps/neww/static/csv/{0}{1}".format(random.randint(100, 999), keyss[i].filename))
+        try:
+            keyss[i].save(keys[i])
+        except OSError:
+            pass
+    f = xlrd.open_workbook(reg)
+    page = f.sheet_by_index(1)
+    N_T = 0
+    N_ID = 0
+    for i in range(6):
+        for j in range(page.ncols):
+            if page.cell_value(i, j) == 'Метрика':
+                N_T = j
+            if "ID" in str(page.cell_value(i, j)):
+                N_ID = j
+    if N_T == page.ncols:
+        param = []
+        names = ''
+    else:
+        param = {}
+        for i in keyss:
+            s = str(i.filename)
+            param[s[:s.index('.')]] = 0
+        names = [i for i in param]
+        log333.write(str(param)+'\n'+str(names)+'\n')
+        K = {}
+        for i in range(len(keys)):
+            f_k = xlrd.open_workbook(keys[i])
+            page_k = f_k.sheet_by_index(0)
+            c = []
+            for j in range(page_k.nrows):
+                if j == 0: continue
+                c.append(str(page_k.cell_value(j, 0))[0])
+            K[names[i]] = c
+        for i in range(6):
+            for j in range(page.ncols):
+                for z in param:
+                    if page.cell_value(i, j) == z:
+                        param[z] = j
+    T_list = []
+    for j in range(6):
+        if page.cell_value(j, N_T) == '':
+            pass
+        elif str(page.cell_value(j, N_T))[0] == 'T' or str(page.cell_value(j, N_T))[0] == 'Т':
+            if N_T == page.ncols:
+                T_list.append('t'+str(page.cell_value(j, N_T))[1:])
+                if T_list == []:
+                    T_list = ['t100']
+            else:
+                for i in range(min(param.values()) - N_T):
+                    T_list.append('t'+str(page.cell_value(j, N_T+i))[1:])
+            break
+    if T_list == []:
+        for i in range(min(param.values()) - N_T):
+            log333.write('---\n')
+            T_list.append('t100_'+str(i+1))
+    db.define_table(name,
+                Field('ekp', type='string'),
+                [Field(i, type='integer') for i in T_list],
+                [Field(i, type='string') for i in param],
+                Field('quarter', type='integer'),
+                Field('year', type='integer'),
+                Field('company_id', 'reference company'),
+                Field('upload_date', type='datetime', default = datetime.date.today()))
+    if N_T != page.ncols:
+        db.define_table(name+'_description',
+                    Field('ekp', type='string'),
+                    [Field(i, type='string') for i in param])
+    db.commit()
+    text = "\ndb.define_table('"+str(name)+"', Field('ekp', type='string'),"
+    for i in T_list:
+        text += " Field('"+str(i)+"', type='integer'),"
+    for i in param:
+        text += " Field('"+str(i)+"', type='string'),"
+    text += " Field('quarter', type='integer'), Field('year', type='integer'), Field('company_id', 'reference company'), Field('upload_date', type='datetime', default = datetime.date.today()))"
+    if len(param) > 0:
+        text += "\ndb.define_table('"+str(name)+"_description', Field('ekp', type='string')"
+        for i in param:
+            text += ", Field('"+str(i)+"', type='string')"
+        text += ")"
+    f = open('apps/neww/models.py', 'r')
+    string = f.read()
+    d = string[-12:]
+    f.close()
+    f = open('apps/neww/models.py', 'w')
+    f.write(string[:-12])
+    f.write(text)
+    f.write(d)
+    f.close()
+    for i in range(page.nrows):
+        if N_T == page.ncols:
+            break
+        if name in str(page.cell_value(i, N_ID)):
+            m = {}
+            ekp = str(page.cell_value(i, N_ID))
+            for i1 in param:
+                if '≠ #' in page.cell_value(i, param[i1]) or '≠#' in page.cell_value(i, param[i1]):
+                    m[i1] = K[i1][:-1]
+                elif '#' in page.cell_value(i, param[i1]):
+                    m[i1] = ['#']
+                elif '≠' in page.cell_value(i, param[i1]):
+                    c = page.cell_value(i, param[i1])[page.cell_value(i, param[i1]).index('≠'):]
+                    m[i1] = K[i1]
+                    for j in c:
+                        try:
+                            m[i1].remove(j)
+                        except ValueError:
+                            pass
+                else:
+                    m[i1] = []
+                    c = page.cell_value(i, param[i1])[page.cell_value(i, param[i1]).index('='):]
+                    for j in c:
+                        if j in K[i1]:
+                            m[i1].append(j)
+            if len(m) == 1:
+                for i1 in m[names[0]]:
+                    c = {'ekp':ekp, names[0]: i1}
+                    db[str(name)+'_description'].insert(**c)
+            elif len(m) == 2:
+                for i1 in m[names[0]]:
+                    for i2 in m[names[1]]:
+                        c = {'ekp':ekp, names[0]: i1, names[1]: i2}
+                        db[str(name)+'_description'].insert(**c)
+            elif len(m) == 3:
+                for i1 in m[names[0]]:
+                    for i2 in m[names[1]]:
+                        for i3 in m[names[2]]:
+                            c = {'ekp':ekp, names[0]: i1, names[1]: i2, names[2]: i3}
+                            db[str(name)+'_description'].insert(**c)
+            elif len(m) == 4:
+                for i1 in m[names[0]]:
+                    for i2 in m[names[1]]:
+                        for i3 in m[names[2]]:
+                            for i4 in m[names[3]]:
+                                c = {'ekp':ekp, names[0]: i1, names[1]: i2, names[2]: i3, names[3]: i4}
+                                db[str(name)+'_description'].insert(**c)
+            elif len(m) == 5:
+                for i1 in m[names[0]]:
+                    for i2 in m[names[1]]:
+                        for i3 in m[names[2]]:
+                            for i4 in m[names[3]]:
+                                for i5 in m[names[4]]:
+                                    c = {'ekp':ekp, names[0]: i1, names[1]: i2, names[2]: i3, names[3]: i4, names[4]: i5}
+                                    db[str(name)+'_description'].insert(**c)
+    log333.close()
+    return dict(message="Операция успешно завершена", user=user, url='', error="OK", df=[])
 
 @action("info_db",method="GET")
 @action.uses("admin_page.html", auth)

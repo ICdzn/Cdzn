@@ -23,6 +23,10 @@ db.define_table('company',
 db.define_table('company_user',
                 Field('site_user','reference auth_user'),
                 Field('company_id','reference company'))
+db.define_table('nbu_tables',
+                Field('name', type='string'),
+                Field('metric', type='string'),
+                Field('param', type='string'))
 db.define_table('ir4_description',
                 Field('name', type='string'),
                 Field('p_id', type='integer'),
@@ -30,10 +34,6 @@ db.define_table('ir4_description',
                 Field('h015', type='string'),
                 Field('k030', type='string'),
                 Field('z220', type='string'))
-db.define_table('fr1_description',
-                Field('ekp', type='string'),
-                Field('f061', type='string'),
-                Field('h001', type='string'))
 db.define_table('vid_strah',
                 Field('name'),
                 Field('type', type='string'),
@@ -48,16 +48,6 @@ db.define_table('errors',
                 Field('ua', type='string'),
                 Field('en', type='string'),
                 Field('ru', type='string'))
-db.define_table('fr1',
-                Field('ekp', type='string'),
-                Field('t100_1', type='integer'),
-                Field('t100_2', type='integer'),
-                Field('f061', type='string'),
-                Field('h001', type='string'),
-                Field('quarter', type='integer'),
-                Field('year', type='integer'),
-                Field('company_id', 'reference company'),
-                Field('upload_date', type='datetime', default = datetime.date.today()))
 db.define_table('type',
                 Field('ekp', type='string'),
                 Field('h011', 'reference vid_strah'),
@@ -107,4 +97,23 @@ db.define_table('rezerv',
                 Field('insert_date', type='datetime'),
                 Field('company_id', 'reference company'),
                 Field('upload_date', type='datetime', default = datetime.date.today()))
+db.define_table('ir2_description',
+                Field('p_id', type='integer'),
+                Field('ekp', type='string'))
+db.define_table('FR1',
+                Field('ekp', type='string'),
+                Field('t100_1',type='integer'),
+                Field('t100_2',type='integer'),
+                Field('F061',type='string'),
+                Field('H001',type='string'),
+                Field('quarter', type='integer'),
+                Field('year', type='integer'),
+                Field('company_id', 'reference company'),
+                Field('upload_date', type='datetime', default = datetime.date.today()))
+db.define_table('FR1_description',
+                Field('ekp', type='string'),
+                Field('F061',type='string'),
+                Field('H001',type='string'))
+db.define_table('FR0', Field('ekp', type='string'), Field('t100_1', type='integer'), Field('t100_2', type='integer'), Field('F061', type='string'), Field('F110', type='string'), Field('H001', type='string'), Field('quarter', type='integer'), Field('year', type='integer'), Field('company_id', 'reference company'), Field('upload_date', type='datetime', default = datetime.date.today()))
+db.define_table('FR0_description', Field('ekp', type='string'), Field('F061', type='string'), Field('F110', type='string'), Field('H001', type='string'))
 db.commit()
