@@ -166,6 +166,19 @@ def join_xml(df):
         df = df.drop(i)
     return df
 
+def find_data(h1, date):
+    h2 = h1.getchildren()[0]
+    if h2.tag.lower() == "head":
+        for i in h2.getchildren():
+            if i.tag.lower() == "reportdate":
+                date = i.text
+        h2 = h1.getchildren()[1]
+    if h2.tag.lower() == "data":
+        result = [h1, date]
+    else:
+        find_data(h2, date)
+    return result
+
 def parseXML(data, user_id):
     log11 = open('log11.txt', 'w')
     [xml, k] = data
@@ -193,55 +206,16 @@ def parseXML(data, user_id):
         df = pd.DataFrame(columns=cols)
         a = {}
         [a.update({i: 0}) for i in cols]
-        for h1 in root.getchildren():
-            log11.write("1-{}\n".format(h1.tag))
-            if h1.tag == "reportdate":
-                date = h1.text
-            m = {}
-            for h2 in h1.getchildren():
-                log11.write("2-{}\n".format(h2.tag))
-                if h2.tag == "reportdate":
-                    date = h2.text
-                if h2.tag in cols:
-                    m[h2.tag] = h2.text
+        result = find_data(root, 0)
+        for data in result[0]:
+            if data.tag.lower() != "data": continue
+            row = {}
+            for i in data:
+                if i.tag.lower() == 't100':
+                    row['t100'] = float(row['t100']) * k
                 else:
-                    m = {}
-                    for h3 in h2.getchildren():
-                        log11.write("3-{}\n".format(h3.tag))
-                        if h3.tag == "reportdate":
-                            date = h3.text
-                        if h3.tag in cols:
-                            m[h3.tag] = h3.text
-                        else:
-                            m = {}
-                            for h4 in h3.getchildren():
-                                log11.write("4-{}\n".format(h4.tag))
-                                if h4.tag == "reportdate":
-                                    date = h4.text
-                                if h4.tag in cols:
-                                    m[h4.tag] = h4.text
-                                else:
-                                    m = {}
-                                    for h5 in h4.getchildren():
-                                        log11.write("5-{}\n".format(h5.tag))
-                                        if h5.tag in cols:
-                                            m[h5.tag] = h5.text
-                                    if m != {}:
-                                        log11.write("-{}-\n".format(m['t100']))
-                                        m['t100'] = float(m['t100']) * k
-                                        df.loc[df.shape[0]] = m
-                                        m = {}
-                            if m != {}:
-                                m['t100'] = float(m['t100']) * k
-                                df.loc[df.shape[0]] = m
-                                m = {}
-                    if m != {}:
-                        m['t100'] = float(m['t100']) * k
-                        df.loc[df.shape[0]] = m
-                        m = {}
-            if m != {}:
-                m['t100'] = float(m['t100']) * k
-                df.loc[df.shape[0]] = m
+                    row[i.tag.lower()] = i.text
+            df.loc[df.shape[0]] = row
     quarter, year = pd.to_datetime(date, dayfirst=True).quarter, pd.to_datetime(date).year
     if error == "OK":
         df_c = df.copy()
@@ -304,58 +278,16 @@ def parse_nbu(data, user_id):
         log11.write(str(cols)+'\n')
         a = {}
         [a.update({i: 0}) for i in cols]
-        for h1 in root.getchildren():
-            log11.write("1-{}\n".format(h1.tag))
-            if h1.tag == "reportdate":
-                date = h1.text
-            m = {}
-            for h2 in h1.getchildren():
-                log11.write("2-{}\n".format(h2.tag))
-                if h2.tag == "reportdate":
-                    date = h2.text
-                if h2.tag in cols:
-                    m[h2.tag] = h2.text
+        result = find_data(root, 0)
+        for data in result[0]:
+            if data.tag.lower() != "data": continue
+            row = {}
+            for i in data:
+                if i.tag.lower() in T_list:
+                    m[i.tag.lower()] = float(m[i.tag.lower()]) * k
                 else:
-                    m = {}
-                    for h3 in h2.getchildren():
-                        log11.write("3-{}\n".format(h3.tag))
-                        if h3.tag == "reportdate":
-                            date = h3.text
-                        if h3.tag in cols:
-                            m[h3.tag] = h3.text
-                        else:
-                            m = {}
-                            for h4 in h3.getchildren():
-                                log11.write("4-{}\n".format(h4.tag))
-                                if h4.tag == "reportdate":
-                                    date = h4.text
-                                if h4.tag in cols:
-                                    m[h4.tag] = h4.text
-                                else:
-                                    m = {}
-                                    for h5 in h4.getchildren():
-                                        log11.write("5-{}\n".format(h5.tag))
-                                        if h5.tag in cols:
-                                            m[h5.tag] = h5.text
-                                    if m != {}:
-                                        for i in T_list:
-                                            m[i] = float(m[i]) * k
-                                        df.loc[df.shape[0]] = m
-                                        m = {}
-                            if m != {}:
-                                for i in T_list:
-                                    m[i] = float(m[i]) * k
-                                df.loc[df.shape[0]] = m
-                                m = {}
-                    if m != {}:
-                        for i in T_list:
-                            m[i] = float(m[i]) * k
-                        df.loc[df.shape[0]] = m
-                        m = {}
-            if m != {}:
-                for i in T_list:
-                    m[i] = float(m[i]) * k
-                df.loc[df.shape[0]] = m
+                    row[i.tag.lower()] = i.text
+            df.loc[df.shape[0]] = row
     quarter, year = pd.to_datetime(date, dayfirst=True).quarter, pd.to_datetime(date).year
     if error == "OK":
         df_c = df.copy()

@@ -138,8 +138,7 @@ def new_iar4():
     return ex4_iar
 
 def db_toexcel(df, quarter, year, basa):
-    if basa == 3:
-        log15 = open('log15.txt', 'w')
+    log15 = open('log15.txt', 'w')
     if basa > 2:
         if quarter == 4:
             period = str(year)
@@ -322,6 +321,19 @@ def df_tonfp_iar(df, quarter, year):
         pd.DataFrame([]).to_excel(writer, sheet_name='РЗ', index = False, header = False)
     return filename1, filename2, filename3
 
+def find_data(h1, date):
+    h2 = h1.getchildren()[0]
+    if h2.tag.lower() == "head":
+        for i in h2.getchildren():
+            if i.tag.lower() == "reportdate":
+                date = i.text
+        h2 = h1.getchildren()[1]
+    if h2.tag.lower() == "data":
+        result = [h1, date]
+    else:
+        find_data(h2, date)
+    return result
+
 def ir2_convert(files):
     logsss = open('logsss.txt', 'w')
     '''xmlschema_doc = etree.parse("apps/neww/static/IR2.xsd")
@@ -344,49 +356,16 @@ def ir2_convert(files):
         else:
             cols = ['ekp', 't070']
             df = pd.DataFrame(columns=cols)
-            for h1 in root.getchildren():
-                if h1.tag == "reportdate":
-                    date = h1.text
-                m = {}
-                for h2 in h1.getchildren():
-                    if h2.tag == "reportdate":
-                        date = h2.text
-                    if h2.tag in cols:
-                        m[h2.tag] = h2.text
+            result = find_data(root, 0)
+            for data in result[0]:
+                if data.tag.lower() != "data": continue
+                row = {}
+                for i in data:
+                    if i.tag.lower() == 't100':
+                        row['t100'] = float(row['t100']) * k
                     else:
-                        m = {}
-                        for h3 in h2.getchildren():
-                            if h3.tag == "reportdate":
-                                date = h3.text
-                            if h3.tag in cols:
-                                m[h3.tag] = h3.text
-                            else:
-                                m = {}
-                                for h4 in h3.getchildren():
-                                    if h4.tag == "reportdate":
-                                        date = h4.text
-                                    if h4.tag in cols:
-                                        m[h4.tag] = h4.text
-                                    else:
-                                        m = {}
-                                        for h5 in h4.getchildren():
-                                            if h5.tag in cols:
-                                                m[h5.tag] = h5.text
-                                        if m != {}:
-                                            m['t070'] = int(m['t070'])
-                                            df.loc[df.shape[0]] = m
-                                            m = {}
-                                if m != {}:
-                                    m['t070'] = int(m['t070'])
-                                    df.loc[df.shape[0]] = m
-                                    m = {}
-                        if m != {}:
-                            m['t070'] = int(m['t070'])
-                            df.loc[df.shape[0]] = m
-                            m = {}
-                if m != {}:
-                    m['t070'] = int(m['t070'])
-                    df.loc[df.shape[0]] = m
+                        row[i.tag.lower()] = i.text
+                df.loc[df.shape[0]] = row
             quarter, year = pd.to_datetime(date, dayfirst=True).quarter, pd.to_datetime(date).year
             logsss.write(str(quarter)+'\n\n')
             if year_d > 0 and year != year_d:
